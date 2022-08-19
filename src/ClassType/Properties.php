@@ -2,10 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Calculator\Prototype\Mapping;
+namespace DobroSite\Mapping\ClassType;
 
-final class Properties
+class Properties
 {
+    /**
+     * @var array<Property>
+     */
     private array $properties = [];
 
     public function __construct(Property ...$properties)

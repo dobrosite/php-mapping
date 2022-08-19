@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Type;
+namespace Tests\Unit;
 
-use DobroSite\Mapping\Type\SameType;
-use DobroSite\Mapping\Type\Type;
+use DobroSite\Mapping\Type;
 use PHPUnit\Framework\TestCase;
 
 abstract class TypeTestCase extends TestCase
@@ -13,27 +12,32 @@ abstract class TypeTestCase extends TestCase
     /**
      * Поставщик данных для {@see testToPhpValue}.
      *
-     * @return iterable<string, array>
+     * @return iterable<string, array<mixed>>
      *
      * @throws \Throwable
      */
     abstract public static function toPhpDataProvider(): iterable;
 
     /**
+     * @param array<mixed> $createTypeParams
+     *
      * @throws \Throwable
      *
      * @dataProvider toPhpDataProvider
      */
-    public function testToPhpValue(mixed $givenValue, mixed $expectedValue): void
-    {
-        self::assertSame(
+    public function testToPhpValue(
+        mixed $givenValue,
+        mixed $expectedValue,
+        array $createTypeParams = []
+    ): void {
+        self::assertEquals(
             $expectedValue,
-            $this->createType()->toPhpValue($givenValue)
+            $this->createType(...$createTypeParams)->toPhpValue($givenValue)
         );
     }
 
     /**
      * Метод должен создавать экземпляр проверяемого типа.
      */
-    abstract protected function createType(): Type;
+    abstract protected function createType(mixed ...$parameters): Type;
 }

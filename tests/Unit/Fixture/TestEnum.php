@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Type\Fixture;
+namespace Tests\Unit\Fixture;
 
 enum TestEnum: string
 {

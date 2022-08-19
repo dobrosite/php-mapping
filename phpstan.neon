@@ -9,3 +9,8 @@ parameters:
     paths:
         - src
         - tests
+    checkGenericClassInNonGenericObjectType: false
+    ignoreErrors:
+        - '/class-string/'
+        - path: 'src/ClassType/CallableObjectFactory.php'
+          message: '/Parameter .* of class ReflectionFunction constructor expects .*, mixed given/'

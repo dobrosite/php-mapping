@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Calculator\Prototype\Mapping;
+namespace DobroSite\Mapping;
 
-final class DefaultValue
+class DefaultValue
 {
     public function __construct(
         public readonly mixed $value

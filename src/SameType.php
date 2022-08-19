@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DobroSite\Mapping\Type;
+namespace DobroSite\Mapping;
 
 final class SameType implements Type
 {

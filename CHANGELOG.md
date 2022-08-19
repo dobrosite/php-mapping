@@ -9,8 +9,20 @@
 ### Добавлено
 
 - Типы:
+  - `Type`
+  - `ClassType`
+    - `TargetClassResolver`
+      - `ClassName`
+    - `Properties`
+      - `Property`
+    - `ObjectFactory`
+      - `AbstractObjectFactory`
+      - `DefaultObjectFactory`
+      - `CallableObjectFactory`
   - `EnumType`
   - `SameType`
 - Исключения:
   - `ConfigurationError`
   - `DataError`
+- Прочее:
+  - `DefaultValue`
