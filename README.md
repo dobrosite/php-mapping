@@ -7,47 +7,6 @@
 Классы типов данных предназначены для преобразования данных из внешнего представления во внутреннее
 и наоборот. Они могут быть использованы как совместно с другими компонентами, так и сами по себе.
 
-### CustomType
-
-Позволяет задать собственные произвольные правила преобразования с помощью функции.
-
-```php
-use DobroSite\Mapping;
-
-$type = new Mapping\CustomType('strtoupper');
-$type->toPhpValue('foo'); // 'FOO'
-
-$type = new Mapping\CustomType(fn(array $value): string => $value['foo']);
-$type->toPhpValue(['foo' => 'bar']); // 'bar'
-```
-
-### EnumType
-
-Преобразовывает значения перечисляемых типов.
-
-```php
-use App\SomeEnum;
-use DobroSite\Mapping;
-
-$type = new Mapping\EnumType(SomeEnum::class);
-$type->toPhpValue('foo'); // SomeEnum::Foo
-```
-
-### FloatType
-
-Преобразовывает значение в вещественное число.
-
-```php
-use App\SomeEnum;
-use DobroSite\Mapping;
-
-$type = new Mapping\FloatType();
-$type->toPhpValue('1234.56'); // 1_234.56
-
-$type = new Mapping\FloatType(new \NumberFormatter('ru_RU', \NumberFormatter::DEFAULT_STYLE));
-$type->toPhpValue('1 234,56'); // 1_234.56
-```
-
 ### ClassType
 
 Используется для отображения данных на объект.
@@ -148,6 +107,58 @@ new Mapping\ClassType\CallableObjectFactory([SomeFactory::class, 'create']);
 new Mapping\ClassType\CallableObjectFactory([$someFactory, 'create']);
 new Mapping\ClassType\CallableObjectFactory('some_factory');
 new Mapping\ClassType\CallableObjectFactory(fn() => new SomeClass());
+```
+
+### CustomType
+
+Позволяет задать собственные произвольные правила преобразования с помощью функции.
+
+```php
+use DobroSite\Mapping;
+
+$type = new Mapping\CustomType('strtoupper');
+$type->toPhpValue('foo'); // 'FOO'
+
+$type = new Mapping\CustomType(fn(array $value): string => $value['foo']);
+$type->toPhpValue(['foo' => 'bar']); // 'bar'
+```
+
+### EnumType
+
+Преобразовывает значения перечисляемых типов.
+
+```php
+use App\SomeEnum;
+use DobroSite\Mapping;
+
+$type = new Mapping\EnumType(SomeEnum::class);
+$type->toPhpValue('foo'); // SomeEnum::Foo
+```
+
+### FloatType
+
+Преобразовывает значение в вещественное число.
+
+```php
+use DobroSite\Mapping;
+
+$type = new Mapping\FloatType();
+$type->toPhpValue('1234.56'); // 1_234.56
+
+$type = new Mapping\FloatType(new \NumberFormatter('ru_RU', \NumberFormatter::DEFAULT_STYLE));
+$type->toPhpValue('1 234,56'); // 1_234.56
+```
+
+### MapType
+
+Преобразовывает значение на основе карты (ассоциативного массива).
+
+```php
+use DobroSite\Mapping;
+
+$type = new Mapping\MapType(['foo' => 'bar', 'bar' => 'baz']);
+$type->toPhpValue('foo'); // 'bar'
+$type->toPhpValue('bar'); // 'baz'
 ```
 
 ### SameType

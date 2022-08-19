@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace DobroSite\Mapping;
 
-final class CustomType implements Type
+class CustomType implements Type
 {
     /**
      * @var callable

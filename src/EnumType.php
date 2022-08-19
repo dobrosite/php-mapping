@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace DobroSite\Mapping;
 
-final class EnumType implements Type
+class EnumType implements Type
 {
     public function __construct(
         private readonly string $enumType

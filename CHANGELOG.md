@@ -11,6 +11,7 @@
 - Новые типы:
   - `CustomType` 
   - `FloatType`
+  - `MapType`
 
 
 ## 0.1.0 - 19.08.2022

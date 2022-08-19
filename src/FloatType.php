@@ -6,7 +6,7 @@ namespace DobroSite\Mapping;
 
 use DobroSite\Mapping\Exception\DataError;
 
-final class FloatType implements Type
+class FloatType implements Type
 {
     private \NumberFormatter $formatter;
 
