@@ -12,6 +12,7 @@
   - `CustomType` 
   - `FloatType`
   - `MapType`
+  - `NullableType`
 
 
 ## 0.1.0 - 19.08.2022

@@ -161,6 +161,19 @@ $type->toPhpValue('foo'); // 'bar'
 $type->toPhpValue('bar'); // 'baz'
 ```
 
+### NullableType
+
+Модификатор для других типов, разрешающий им принимать значение `null`.
+
+```injectablephp
+use DobroSite\Mapping;
+
+$mainType = new Mapping\MapType(['foo' => 'bar']);
+$type = new Mapping\NullableType($mainType);
+$type->toPhpValue('foo'); // 'bar'
+$type->toPhpValue(null); // NULL
+```
+
 ### SameType
 
 Не выполняет никаких преобразований. Пригоден для простых типов: строк, чисел.
