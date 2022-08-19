@@ -9,6 +9,7 @@
 ### Добавлено
 
 - Новые типы:
+  - `CustomType` 
   - `FloatType`
 
 

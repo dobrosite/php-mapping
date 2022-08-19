@@ -7,16 +7,18 @@
 Классы типов данных предназначены для преобразования данных из внешнего представления во внутреннее
 и наоборот. Они могут быть использованы как совместно с другими компонентами, так и сами по себе.
 
-### SameType
+### CustomType
 
-Не выполняет никаких преобразований. Пригоден для простых типов: строк, чисел.
+Позволяет задать собственные произвольные правила преобразования с помощью функции.
 
 ```php
 use DobroSite\Mapping;
 
-$type = new Mapping\SameType();
-$type->toPhpValue('foo'); // 'foo'
-$type->toPhpValue(123); // 123
+$type = new Mapping\CustomType('strtoupper');
+$type->toPhpValue('foo'); // 'FOO'
+
+$type = new Mapping\CustomType(fn(array $value): string => $value['foo']);
+$type->toPhpValue(['foo' => 'bar']); // 'bar'
 ```
 
 ### EnumType
@@ -146,6 +148,18 @@ new Mapping\ClassType\CallableObjectFactory([SomeFactory::class, 'create']);
 new Mapping\ClassType\CallableObjectFactory([$someFactory, 'create']);
 new Mapping\ClassType\CallableObjectFactory('some_factory');
 new Mapping\ClassType\CallableObjectFactory(fn() => new SomeClass());
+```
+
+### SameType
+
+Не выполняет никаких преобразований. Пригоден для простых типов: строк, чисел.
+
+```php
+use DobroSite\Mapping;
+
+$type = new Mapping\SameType();
+$type->toPhpValue('foo'); // 'foo'
+$type->toPhpValue(123); // 123
 ```
 
 ## Значения по умолчанию
