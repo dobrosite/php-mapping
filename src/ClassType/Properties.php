@@ -25,7 +25,12 @@ class Properties implements \Iterator
 
     public function current(): Property
     {
-        return \current($this->properties);
+        $property = \current($this->properties);
+        if (!$property instanceof Property) {
+            throw new \OutOfBoundsException();
+        }
+
+        return $property;
     }
 
     public function findByDataName(string $name): Property
@@ -54,7 +59,12 @@ class Properties implements \Iterator
 
     public function key(): ?int
     {
-        return key($this->properties);
+        $key = key($this->properties);
+        if ($key === null) {
+            return null;
+        }
+
+        return (int) $key;
     }
 
     public function next(): void

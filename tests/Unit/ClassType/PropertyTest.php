@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\ClassType;
 
 use DobroSite\Mapping\ClassType\Property;
+use DobroSite\Mapping\Exception\ConfigurationError;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -39,10 +40,11 @@ final class PropertyTest extends TestCase
      */
     public function testSetNotExistedPublicValue(): void
     {
-        $object = new \stdClass();
+        $this->expectExceptionObject(
+            new ConfigurationError('Object of class stdClass does not has property "foo".')
+        );
 
         $property = new Property('foo');
-        $property->setValue($object, 'FOO');
-        self::assertEquals('FOO', $object->foo);
+        $property->setValue(new \stdClass(), 'FOO');
     }
 }

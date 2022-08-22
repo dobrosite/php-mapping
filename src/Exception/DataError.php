@@ -4,6 +4,6 @@ declare(strict_types=1);
 
 namespace DobroSite\Mapping\Exception;
 
-final class DataError extends \RuntimeException
+class DataError extends \RuntimeException
 {
 }

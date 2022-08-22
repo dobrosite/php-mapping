@@ -127,7 +127,7 @@ final class DefaultObjectFactoryTest extends TestCase
     /**
      * @throws \Throwable
      */
-    public function testUseDefaultValue(): void
+    public function testUseDefaultValueWithConstructor(): void
     {
         $factory = new DefaultObjectFactory();
         $object = $factory->createObject(
@@ -142,6 +142,28 @@ final class DefaultObjectFactoryTest extends TestCase
         );
 
         self::assertInstanceOf(ClassWithConstructor::class, $object);
+        self::assertEquals('FOO', $object->foo);
+        self::assertEquals('DEFAULT', $object->bar);
+    }
+
+    /**
+     * @throws \Throwable
+     */
+    public function testUseDefaultValueWithoutConstructor(): void
+    {
+        $factory = new DefaultObjectFactory();
+        $object = $factory->createObject(
+            new \ReflectionClass(ClassWithoutConstructor::class),
+            new Properties(
+                new Property('foo'),
+                new Property('bar', defaultValue: new DefaultValue('DEFAULT')),
+            ),
+            [
+                'foo' => 'FOO',
+            ]
+        );
+
+        self::assertInstanceOf(ClassWithoutConstructor::class, $object);
         self::assertEquals('FOO', $object->foo);
         self::assertEquals('DEFAULT', $object->bar);
     }
