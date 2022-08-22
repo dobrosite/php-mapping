@@ -42,4 +42,49 @@ final class PropertiesTest extends TestCase
         self::assertSame('Bar', $properties->findByPropertyName('bar')->dataName);
         self::assertSame('baz', $properties->findByPropertyName('baz')->dataName);
     }
+
+    /**
+     * @throws \Throwable
+     */
+    public function testIterator(): void
+    {
+        $properties = new Properties(
+            new Property(propertyName: 'foo'),
+            new Property(propertyName: 'bar'),
+            new Property(propertyName: 'baz'),
+        );
+
+        self::assertInstanceOf(\Iterator::class, $properties);
+
+        $properties->rewind();
+        self::assertTrue($properties->valid());
+        self::assertSame(0, $properties->key());
+        $property = $properties->current();
+        self::assertInstanceOf(Property::class, $property);
+        self::assertSame('foo', $property->propertyName);
+
+        $properties->next();
+        self::assertTrue($properties->valid());
+        self::assertSame(1, $properties->key());
+        $property = $properties->current();
+        self::assertInstanceOf(Property::class, $property);
+        self::assertSame('bar', $property->propertyName);
+
+        $properties->next();
+        self::assertTrue($properties->valid());
+        self::assertSame(2, $properties->key());
+        $property = $properties->current();
+        self::assertInstanceOf(Property::class, $property);
+        self::assertSame('baz', $property->propertyName);
+
+        $properties->next();
+        self::assertFalse($properties->valid());
+        self::assertNull($properties->key());
+
+        $properties->rewind();
+        $property = $properties->current();
+        self::assertSame(0, $properties->key());
+        self::assertInstanceOf(Property::class, $property);
+        self::assertSame('foo', $property->propertyName);
+    }
 }
