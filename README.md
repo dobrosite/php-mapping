@@ -165,7 +165,7 @@ $type->toPhpValue('bar'); // 'baz'
 
 Модификатор для других типов, разрешающий им принимать значение `null`.
 
-```injectablephp
+```php
 use DobroSite\Mapping;
 
 $mainType = new Mapping\MapType(['foo' => 'bar']);
