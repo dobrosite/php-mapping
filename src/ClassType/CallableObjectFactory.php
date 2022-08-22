@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DobroSite\Mapping\ClassType;
 
+use DobroSite\Mapping\Data;
 use DobroSite\Mapping\Exception\ConfigurationError;
 use DobroSite\Mapping\Exception\DataError;
 
@@ -26,7 +27,7 @@ final class CallableObjectFactory extends AbstractObjectFactory
     public function createObject(
         \ReflectionClass $class,
         Properties $properties,
-        array $data
+        Data $data
     ): object {
         if (\is_array($this->callable)) {
             $parameters = self::getParametersForArrayFactory($this->callable);
@@ -34,9 +35,8 @@ final class CallableObjectFactory extends AbstractObjectFactory
             $parameters = self::getParametersForFunction($this->callable);
         }
 
-        [$arguments, $data] = $this->getValues($properties, $parameters, $data);
+        $arguments = $this->getValues($properties, $parameters, $data);
         \assert(\is_array($arguments));
-        \assert(\is_array($data));
 
         $object = \call_user_func($this->callable, ...$arguments);
         \assert(\is_object($object));

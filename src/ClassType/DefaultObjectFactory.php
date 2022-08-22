@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DobroSite\Mapping\ClassType;
 
+use DobroSite\Mapping\Data;
 use DobroSite\Mapping\Exception\ConfigurationError;
 
 final class DefaultObjectFactory extends AbstractObjectFactory
@@ -11,7 +12,7 @@ final class DefaultObjectFactory extends AbstractObjectFactory
     public function createObject(
         \ReflectionClass $class,
         Properties $properties,
-        array $data
+        Data $data
     ): object {
         $arguments = [];
         $constructor = $class->getConstructor();
@@ -25,13 +26,8 @@ final class DefaultObjectFactory extends AbstractObjectFactory
                     )
                 );
             }
-            [$arguments, $data] = $this->getValues(
-                $properties,
-                $constructor->getParameters(),
-                $data
-            );
+            $arguments = $this->getValues($properties, $constructor->getParameters(), $data);
             \assert(\is_array($arguments));
-            \assert(\is_array($data));
         }
 
         $object = $class->newInstanceArgs($arguments);

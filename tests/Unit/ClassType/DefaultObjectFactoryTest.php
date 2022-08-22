@@ -7,6 +7,7 @@ namespace Tests\Unit\ClassType;
 use DobroSite\Mapping\ClassType\DefaultObjectFactory;
 use DobroSite\Mapping\ClassType\Properties;
 use DobroSite\Mapping\ClassType\Property;
+use DobroSite\Mapping\Data;
 use DobroSite\Mapping\DefaultValue;
 use DobroSite\Mapping\Exception\ConfigurationError;
 use DobroSite\Mapping\Exception\DataError;
@@ -33,10 +34,10 @@ final class DefaultObjectFactoryTest extends TestCase
                 new Property('foo'),
                 new Property('bar'),
             ),
-            [
+            new Data([
                 'foo' => 'FOO',
                 'bar' => 'BAR',
-            ]
+            ])
         );
 
         self::assertInstanceOf(ClassWithoutConstructor::class, $object);
@@ -56,15 +57,15 @@ final class DefaultObjectFactoryTest extends TestCase
                 new Property('foo'),
                 new Property('bar'),
             ),
-            [
+            new Data([
                 'foo' => 'FOO',
                 'bar' => 'BAR',
-            ]
+            ])
         );
 
         self::assertInstanceOf(ClassWithConstructor::class, $object);
-        self::assertEquals('FOO', $object->foo);
-        self::assertEquals('BAR', $object->bar);
+        self::assertEquals('FOO', $object->getFoo());
+        self::assertEquals('BAR', $object->getBar());
     }
 
     /**
@@ -82,7 +83,7 @@ final class DefaultObjectFactoryTest extends TestCase
         $factory->createObject(
             new \ReflectionClass(ClassWithPrivateConstructor::class),
             new Properties(),
-            []
+            new Data([])
         );
     }
 
@@ -99,7 +100,7 @@ final class DefaultObjectFactoryTest extends TestCase
         $factory->createObject(
             new \ReflectionClass(ClassWithConstructor::class),
             new Properties(new Property('foo')),
-            []
+            new Data([])
         );
     }
 
@@ -114,14 +115,14 @@ final class DefaultObjectFactoryTest extends TestCase
             new Properties(
                 new Property('foo'),
             ),
-            [
+            new Data([
                 'foo' => 'FOO',
-            ]
+            ])
         );
 
         self::assertInstanceOf(ClassWithConstructor::class, $object);
-        self::assertEquals('FOO', $object->foo);
-        self::assertEquals('default', $object->bar);
+        self::assertEquals('FOO', $object->getFoo());
+        self::assertEquals('default', $object->getBar());
     }
 
     /**
@@ -136,14 +137,14 @@ final class DefaultObjectFactoryTest extends TestCase
                 new Property('foo'),
                 new Property('bar', defaultValue: new DefaultValue('DEFAULT')),
             ),
-            [
+            new Data([
                 'foo' => 'FOO',
-            ]
+            ])
         );
 
         self::assertInstanceOf(ClassWithConstructor::class, $object);
-        self::assertEquals('FOO', $object->foo);
-        self::assertEquals('DEFAULT', $object->bar);
+        self::assertEquals('FOO', $object->getFoo());
+        self::assertEquals('DEFAULT', $object->getBar());
     }
 
     /**
@@ -158,9 +159,9 @@ final class DefaultObjectFactoryTest extends TestCase
                 new Property('foo'),
                 new Property('bar', defaultValue: new DefaultValue('DEFAULT')),
             ),
-            [
+            new Data([
                 'foo' => 'FOO',
-            ]
+            ])
         );
 
         self::assertInstanceOf(ClassWithoutConstructor::class, $object);

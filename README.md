@@ -190,4 +190,23 @@ $type->toPhpValue(123); // 123
 
 ### DefaultValue
 
-Позволяет задать значение по умолчанию, например, для свойства объекта.
+Позволяет задать значение по умолчанию, например, для свойства объекта. Значение должно задаваться
+в формате исходных данных.
+
+```php
+use DobroSite\Mapping;
+
+new Mapping\ClassType(
+    new Mapping\ClassType\ClassName(SomeClass::class),
+    new Mapping\ClassType\Properties(
+        new Mapping\ClassType\Property(
+            propertyName: 'foo',
+            type: new ClassType(
+                new ClassType\ClassName(OtherClass::class),
+                new ClassType\Properties(/* … */),
+            ),
+            defaultValue: new DefaultValue([]), // ← Значение по умолчанию для свойства «foo».
+        )
+    )
+);
+```

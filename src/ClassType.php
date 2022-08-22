@@ -44,6 +44,6 @@ class ClassType implements Type
 
         $class = $this->targetClassResolver->getTargetClass($dataValue);
 
-        return $this->factory->createObject($class, $this->properties, $dataValue);
+        return $this->factory->createObject($class, $this->properties, new Data($dataValue));
     }
 }

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration;
+namespace Tests\Integration\ClassType;
 
 use DobroSite\Mapping\ClassType;
 use DobroSite\Mapping\DefaultValue;
 use PHPUnit\Framework\TestCase;
 use Tests\Fixture\Recursive;
 
-final class ClassTypePropertyDefaultValueTest extends TestCase
+final class PropertyDefaultValueTest extends TestCase
 {
     /**
      * @throws \Throwable
@@ -45,7 +45,7 @@ final class ClassTypePropertyDefaultValueTest extends TestCase
                         new ClassType\ClassName(Recursive::class),
                         new ClassType\Properties(),
                     ),
-                    defaultValue: new DefaultValue(new Recursive()),
+                    defaultValue: new DefaultValue([]),
                 )
             )
         );

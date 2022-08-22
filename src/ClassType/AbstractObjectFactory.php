@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace DobroSite\Mapping\ClassType;
 
+use DobroSite\Mapping\Data;
+use DobroSite\Mapping\DataItem;
 use DobroSite\Mapping\DefaultValue;
 use DobroSite\Mapping\Exception\ConfigurationError;
 use DobroSite\Mapping\Exception\DataError;
@@ -12,22 +14,17 @@ use DobroSite\Mapping\Exception\ValueNotSpecified;
 abstract class AbstractObjectFactory implements ObjectFactory
 {
     /**
-     * @param array<string, mixed> $data
-     *
-     * @throws ConfigurationError
      * @throws DataError
      */
-    protected function getValueFor(Property $property, array &$data): mixed
+    protected function getDataItem(Property $property, Data $data): DataItem
     {
-        if (array_key_exists($property->dataName, $data)) {
-            $value = $data[$property->dataName];
-            unset($data[$property->dataName]);
-
-            return $property->type->toPhpValue($value);
+        $item = $data->get($property->dataName);
+        if ($item instanceof DataItem) {
+            return $item;
         }
 
         if ($property->defaultValue instanceof DefaultValue) {
-            return $property->defaultValue->value;
+            return new DataItem($property->defaultValue->value);
         }
 
         throw ValueNotSpecified::create($property->dataName);
@@ -35,7 +32,6 @@ abstract class AbstractObjectFactory implements ObjectFactory
 
     /**
      * @param array<\ReflectionParameter> $parameters
-     * @param array<mixed>                $data
      *
      * @return array<mixed>
      *
@@ -45,7 +41,7 @@ abstract class AbstractObjectFactory implements ObjectFactory
     protected function getValues(
         Properties $properties,
         array $parameters,
-        array $data
+        Data $data
     ): array {
         $values = [];
 
@@ -55,7 +51,7 @@ abstract class AbstractObjectFactory implements ObjectFactory
             $property = $properties->findByPropertyName($parameter->getName());
 
             try {
-                $value = $this->getValueFor($property, $data);
+                $dataItem = $this->getDataItem($property, $data);
             } catch (ValueNotSpecified $exception) {
                 if ($parameter->isDefaultValueAvailable()) {
                     continue;
@@ -63,33 +59,34 @@ abstract class AbstractObjectFactory implements ObjectFactory
                 throw $exception;
             }
 
-            $values[] = $value;
+            if (!$dataItem->used) {
+                $values[] = $property->type->toPhpValue($dataItem->value);
+                $dataItem->used = true;
+            }
         }
 
-        return [
-            $values,
-            $data,
-        ];
+        return $values;
     }
 
     /**
-     * @param array<mixed> $data
-     *
      * @throws ConfigurationError
      * @throws DataError
      */
     protected function setObjectProperties(
         object $object,
         Properties $properties,
-        array &$data
+        Data $data
     ): void {
         foreach ($properties as $property) {
             try {
-                $value = $this->getValueFor($property, $data);
+                $dataItem = $this->getDataItem($property, $data);
             } catch (ValueNotSpecified) {
                 continue;
             }
-            $property->setValue($object, $value);
+            if (!$dataItem->used) {
+                $property->setValue($object, $property->type->toPhpValue($dataItem->value));
+                $dataItem->used = true;
+            }
         }
     }
 }

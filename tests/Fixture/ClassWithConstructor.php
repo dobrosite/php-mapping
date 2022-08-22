@@ -12,8 +12,18 @@ final class ClassWithConstructor
     }
 
     public function __construct(
-        public readonly string $foo,
-        public readonly string $bar = 'default',
+        private readonly string $foo,
+        private readonly string $bar = 'default',
     ) {
+    }
+
+    public function getBar(): string
+    {
+        return $this->bar;
+    }
+
+    public function getFoo(): string
+    {
+        return $this->foo;
     }
 }

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration;
+namespace Tests\Integration\ClassType;
 
 use DobroSite\Mapping\ClassType;
 use PHPUnit\Framework\TestCase;
 use Tests\Fixture\Recursive;
 use Tests\Fixture\RecursiveWithConstructor;
 
-final class ClassTypeSetObjectPropertyTest extends TestCase
+final class SetObjectPropertyTest extends TestCase
 {
     /**
      * @throws \Throwable

@@ -7,6 +7,7 @@ namespace Tests\Unit\ClassType;
 use DobroSite\Mapping\ClassType\CallableObjectFactory;
 use DobroSite\Mapping\ClassType\Properties;
 use DobroSite\Mapping\ClassType\Property;
+use DobroSite\Mapping\Data;
 use DobroSite\Mapping\Exception\ConfigurationError;
 use PHPUnit\Framework\TestCase;
 use Tests\Fixture\ClassWithConstructor;
@@ -32,10 +33,10 @@ final class CallableObjectFactoryTest extends TestCase
                 new Property('foo'),
                 new Property('bar'),
             ),
-            [
+            new Data([
                 'foo' => 'FOO',
                 'bar' => 'BAR',
-            ]
+            ])
         );
 
         self::assertInstanceOf(ClassWithoutConstructor::class, $object);
@@ -57,15 +58,15 @@ final class CallableObjectFactoryTest extends TestCase
                 new Property('foo'),
                 new Property('bar'),
             ),
-            [
+            new Data([
                 'foo' => 'FOO',
                 'bar' => 'BAR',
-            ]
+            ])
         );
 
         self::assertInstanceOf(ClassWithConstructor::class, $object);
-        self::assertEquals('FOO', $object->foo);
-        self::assertEquals('BAR', $object->bar);
+        self::assertEquals('FOO', $object->getFoo());
+        self::assertEquals('BAR', $object->getBar());
     }
 
     /**
@@ -86,7 +87,7 @@ final class CallableObjectFactoryTest extends TestCase
         $factory->createObject(
             new \ReflectionClass(ClassWithoutConstructor::class),
             new Properties(),
-            []
+            new Data([])
         );
     }
 
@@ -108,7 +109,7 @@ final class CallableObjectFactoryTest extends TestCase
         $factory->createObject(
             new \ReflectionClass(ClassWithoutConstructor::class),
             new Properties(),
-            []
+            new Data([])
         );
     }
 
@@ -124,15 +125,15 @@ final class CallableObjectFactoryTest extends TestCase
                 new Property('foo'),
                 new Property('bar'),
             ),
-            [
+            new Data([
                 'foo' => 'FOO',
                 'bar' => 'BAR',
-            ]
+            ])
         );
 
         self::assertInstanceOf(ClassWithConstructor::class, $object);
-        self::assertEquals('FOO', $object->foo);
-        self::assertEquals('BAR', $object->bar);
+        self::assertEquals('FOO', $object->getFoo());
+        self::assertEquals('BAR', $object->getBar());
     }
 
     /**
@@ -155,7 +156,7 @@ final class CallableObjectFactoryTest extends TestCase
         $factory->createObject(
             new \ReflectionClass(ClassWithoutConstructor::class),
             new Properties(),
-            []
+            new Data([])
         );
     }
 
@@ -173,14 +174,14 @@ final class CallableObjectFactoryTest extends TestCase
                 new Property('foo'),
                 new Property('bar'),
             ),
-            [
+            new Data([
                 'foo' => 'FOO',
                 'bar' => 'BAR',
-            ]
+            ])
         );
 
         self::assertInstanceOf(ClassWithConstructor::class, $object);
-        self::assertEquals('FOO', $object->foo);
-        self::assertEquals('BAR', $object->bar);
+        self::assertEquals('FOO', $object->getFoo());
+        self::assertEquals('BAR', $object->getBar());
     }
 }
