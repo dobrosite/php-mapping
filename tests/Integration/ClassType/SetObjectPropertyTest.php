@@ -9,6 +9,9 @@ use PHPUnit\Framework\TestCase;
 use Tests\Fixture\Recursive;
 use Tests\Fixture\RecursiveWithConstructor;
 
+/**
+ * @coversNothing
+ */
 final class SetObjectPropertyTest extends TestCase
 {
     /**

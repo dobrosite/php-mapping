@@ -24,7 +24,7 @@ final class CallableObjectFactory extends AbstractObjectFactory
      * @throws ConfigurationError
      * @throws DataError
      */
-    public function createObject(
+    protected function createInstance(
         \ReflectionClass $class,
         Properties $properties,
         Data $data
@@ -35,13 +35,9 @@ final class CallableObjectFactory extends AbstractObjectFactory
             $parameters = self::getParametersForFunction($this->callable);
         }
 
-        $arguments = $this->getValues($properties, $parameters, $data);
-        \assert(\is_array($arguments));
-
+        $arguments = $this->useAsParameters($parameters, $data, $properties);
         $object = \call_user_func($this->callable, ...$arguments);
         \assert(\is_object($object));
-
-        $this->setObjectProperties($object, $properties, $data);
 
         return $object;
     }

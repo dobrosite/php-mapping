@@ -9,7 +9,7 @@ final class Data
     /**
      * @var array<DataItem>
      */
-    private readonly array $items;
+    private array $items;
 
     /**
      * @param array<mixed> $items
@@ -25,5 +25,12 @@ final class Data
     public function get(string $name): ?DataItem
     {
         return $this->items[$name] ?? null;
+    }
+
+    public function setDefaultValue(string $name, mixed $value): void
+    {
+        if (!\array_key_exists($name, $this->items)) {
+            $this->items[$name] = new DataItem($value);
+        }
     }
 }

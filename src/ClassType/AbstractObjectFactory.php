@@ -9,64 +9,38 @@ use DobroSite\Mapping\DataItem;
 use DobroSite\Mapping\DefaultValue;
 use DobroSite\Mapping\Exception\ConfigurationError;
 use DobroSite\Mapping\Exception\DataError;
+use DobroSite\Mapping\Exception\ValueAlreadyUsed;
 use DobroSite\Mapping\Exception\ValueNotSpecified;
 
 abstract class AbstractObjectFactory implements ObjectFactory
 {
-    /**
-     * @throws DataError
-     */
-    protected function getDataItem(Property $property, Data $data): DataItem
-    {
-        $item = $data->get($property->dataName);
-        if ($item instanceof DataItem) {
-            return $item;
+    public function createObject(
+        \ReflectionClass $class,
+        Properties $properties,
+        Data $data
+    ): object {
+        foreach ($properties as $property) {
+            if ($property->defaultValue instanceof DefaultValue) {
+                $data->setDefaultValue($property->dataName, $property->defaultValue->value);
+            }
         }
 
-        if ($property->defaultValue instanceof DefaultValue) {
-            return new DataItem($property->defaultValue->value);
-        }
+        $object = $this->createInstance($class, $properties, $data);
 
-        throw ValueNotSpecified::create($property->dataName);
+        $this->setObjectProperties($object, $properties, $data);
+
+        return $object;
     }
 
     /**
-     * @param array<\ReflectionParameter> $parameters
-     *
-     * @return array<mixed>
-     *
      * @throws ConfigurationError
      * @throws DataError
      */
-    protected function getValues(
+    abstract protected function createInstance(
+        \ReflectionClass $class,
         Properties $properties,
-        array $parameters,
-        Data $data
-    ): array {
-        $values = [];
-
-        foreach ($parameters as $parameter) {
-            \assert($parameter instanceof \ReflectionParameter);
-
-            $property = $properties->findByPropertyName($parameter->getName());
-
-            try {
-                $dataItem = $this->getDataItem($property, $data);
-            } catch (ValueNotSpecified $exception) {
-                if ($parameter->isDefaultValueAvailable()) {
-                    continue;
-                }
-                throw $exception;
-            }
-
-            if (!$dataItem->used) {
-                $values[] = $property->type->toPhpValue($dataItem->value);
-                $dataItem->used = true;
-            }
-        }
-
-        return $values;
-    }
+        Data $data,
+    ): object;
 
     /**
      * @throws ConfigurationError
@@ -79,14 +53,67 @@ abstract class AbstractObjectFactory implements ObjectFactory
     ): void {
         foreach ($properties as $property) {
             try {
-                $dataItem = $this->getDataItem($property, $data);
-            } catch (ValueNotSpecified) {
+                $dataItem = $this->useAsValueFor($property, $data);
+            } catch (ValueNotSpecified|ValueAlreadyUsed) {
                 continue;
             }
-            if (!$dataItem->used) {
-                $property->setValue($object, $property->type->toPhpValue($dataItem->value));
-                $dataItem->used = true;
-            }
+            $property->setValue($object, $property->type->toPhpValue($dataItem->value));
         }
+    }
+
+    /**
+     * @param array<\ReflectionParameter> $parameters
+     *
+     * @return array<mixed>
+     *
+     * @throws ConfigurationError
+     * @throws DataError
+     */
+    protected function useAsParameters(
+        array $parameters,
+        Data $data,
+        Properties $properties,
+    ): array {
+        $values = [];
+
+        foreach ($parameters as $parameter) {
+            \assert($parameter instanceof \ReflectionParameter);
+
+            $property = $properties->findByPropertyName($parameter->getName());
+
+            try {
+                $dataItem = $this->useAsValueFor($property, $data);
+            } catch (ValueNotSpecified $exception) {
+                if ($parameter->isDefaultValueAvailable()) {
+                    continue;
+                }
+                throw $exception;
+            }
+
+            $values[] = $property->type->toPhpValue($dataItem->value);
+        }
+
+        return $values;
+    }
+
+    /**
+     * @throws DataError
+     * @throws ValueAlreadyUsed
+     */
+    protected function useAsValueFor(Property $property, Data $data): DataItem
+    {
+        $item = $data->get($property->dataName);
+        if ($item instanceof DataItem) {
+            if ($item->used) {
+                throw new ValueAlreadyUsed(
+                    \sprintf('Value for "%s" was already used.', $property->dataName)
+                );
+            }
+            $item->used = true;
+
+            return $item;
+        }
+
+        throw ValueNotSpecified::create($property->dataName);
     }
 }

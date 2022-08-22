@@ -10,6 +10,9 @@ use PHPUnit\Framework\TestCase;
 use Tests\Fixture\ClassWithConstructor;
 use Tests\Fixture\SyntheticConstructor;
 
+/**
+ * @coversNothing
+ */
 final class UseConstructorTest extends TestCase
 {
     /**

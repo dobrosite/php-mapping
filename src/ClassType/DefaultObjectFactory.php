@@ -9,7 +9,7 @@ use DobroSite\Mapping\Exception\ConfigurationError;
 
 final class DefaultObjectFactory extends AbstractObjectFactory
 {
-    public function createObject(
+    protected function createInstance(
         \ReflectionClass $class,
         Properties $properties,
         Data $data
@@ -26,14 +26,12 @@ final class DefaultObjectFactory extends AbstractObjectFactory
                     )
                 );
             }
-            $arguments = $this->getValues($properties, $constructor->getParameters(), $data);
+            $arguments = $this->useAsParameters($constructor->getParameters(), $data, $properties);
             \assert(\is_array($arguments));
         }
 
         $object = $class->newInstanceArgs($arguments);
         \assert(\is_object($object));
-
-        $this->setObjectProperties($object, $properties, $data);
 
         return $object;
     }

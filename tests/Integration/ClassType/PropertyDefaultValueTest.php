@@ -9,6 +9,9 @@ use DobroSite\Mapping\DefaultValue;
 use PHPUnit\Framework\TestCase;
 use Tests\Fixture\Recursive;
 
+/**
+ * @coversNothing
+ */
 final class PropertyDefaultValueTest extends TestCase
 {
     /**
