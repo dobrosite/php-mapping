@@ -9,7 +9,7 @@ use DobroSite\Mapping\ClassType\ObjectFactory;
 use DobroSite\Mapping\ClassType\Properties;
 use DobroSite\Mapping\ClassType\TargetClassResolver;
 use DobroSite\Mapping\Type;
-use Tests\Unit\Fixture\ClassWithConstructor;
+use Tests\Fixture\ClassWithConstructor;
 
 /**
  * @covers \DobroSite\Mapping\ClassType

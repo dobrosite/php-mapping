@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Fixture;
+namespace Tests\Fixture;
 
 final class TestFactory
 {

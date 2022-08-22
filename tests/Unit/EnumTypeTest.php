@@ -6,7 +6,7 @@ namespace Tests\Unit;
 
 use DobroSite\Mapping\EnumType;
 use DobroSite\Mapping\Type;
-use Tests\Unit\Fixture\TestEnum;
+use Tests\Fixture\TestEnum;
 
 /**
  * @covers \DobroSite\Mapping\EnumType

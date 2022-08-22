@@ -11,9 +11,9 @@ use DobroSite\Mapping\DefaultValue;
 use DobroSite\Mapping\Exception\ConfigurationError;
 use DobroSite\Mapping\Exception\DataError;
 use PHPUnit\Framework\TestCase;
-use Tests\Unit\Fixture\ClassWithConstructor;
-use Tests\Unit\Fixture\ClassWithoutConstructor;
-use Tests\Unit\Fixture\ClassWithPrivateConstructor;
+use Tests\Fixture\ClassWithConstructor;
+use Tests\Fixture\ClassWithoutConstructor;
+use Tests\Fixture\ClassWithPrivateConstructor;
 
 /**
  * @covers \DobroSite\Mapping\ClassType\DefaultObjectFactory

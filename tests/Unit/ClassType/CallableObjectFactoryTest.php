@@ -9,9 +9,9 @@ use DobroSite\Mapping\ClassType\Properties;
 use DobroSite\Mapping\ClassType\Property;
 use DobroSite\Mapping\Exception\ConfigurationError;
 use PHPUnit\Framework\TestCase;
-use Tests\Unit\Fixture\ClassWithConstructor;
-use Tests\Unit\Fixture\ClassWithoutConstructor;
-use Tests\Unit\Fixture\TestFactory;
+use Tests\Fixture\ClassWithConstructor;
+use Tests\Fixture\ClassWithoutConstructor;
+use Tests\Fixture\TestFactory;
 
 /**
  * @covers \DobroSite\Mapping\ClassType\CallableObjectFactory
@@ -164,7 +164,7 @@ final class CallableObjectFactoryTest extends TestCase
      */
     public function testStringFunctionFactory(): void
     {
-        require_once \dirname(__DIR__) . '/Fixture/factory_function.php';
+        require_once \dirname(__DIR__, 2) . '/Fixture/factory_function.php';
 
         $factory = new CallableObjectFactory('test_factory_function');
         $object = $factory->createObject(
