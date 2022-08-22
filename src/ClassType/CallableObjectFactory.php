@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DobroSite\Mapping\ClassType;
 
 use DobroSite\Mapping\Exception\ConfigurationError;
+use DobroSite\Mapping\Exception\DataError;
 
 final class CallableObjectFactory extends AbstractObjectFactory
 {
@@ -18,6 +19,10 @@ final class CallableObjectFactory extends AbstractObjectFactory
         $this->callable = $callable;
     }
 
+    /**
+     * @throws ConfigurationError
+     * @throws DataError
+     */
     public function createObject(
         \ReflectionClass $class,
         Properties $properties,
@@ -46,7 +51,6 @@ final class CallableObjectFactory extends AbstractObjectFactory
      *
      * @return array<\ReflectionParameter>
      *
-     * @throws \InvalidArgumentException
      * @throws ConfigurationError
      */
     private static function getParametersForArrayFactory(array $factory): array
@@ -65,7 +69,7 @@ final class CallableObjectFactory extends AbstractObjectFactory
                 );
             }
         } else {
-            throw new \InvalidArgumentException(
+            throw new ConfigurationError(
                 \sprintf(
                     'Element 0 of callable array should be an object or a string, %s given.',
                     \gettype($factoryClassOrObject)

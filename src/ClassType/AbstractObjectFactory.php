@@ -63,7 +63,6 @@ abstract class AbstractObjectFactory implements ObjectFactory
                 throw $exception;
             }
 
-            $value = $property->type->toPhpValue($value);
             $values[] = $value;
         }
 
