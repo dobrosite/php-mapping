@@ -14,3 +14,5 @@ parameters:
         - '/class-string/'
         - path: 'src/ClassType/CallableObjectFactory.php'
           message: '/Parameter .* of class ReflectionFunction constructor expects .*, mixed given/'
+        - path: 'tests/Unit/*TypeTest.php'
+          message: '/constructor expects .+, mixed given/'

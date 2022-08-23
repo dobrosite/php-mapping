@@ -58,6 +58,7 @@
         "ext-intl": "*"
     },
     "require-dev": {
+        "ext-iconv": "*",
         "composer/package-versions-deprecated": "^1.11",
         "ergebnis/composer-normalize": "^2.28",
         "icanhazstring/composer-unused": "^0.8.2",
