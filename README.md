@@ -123,6 +123,18 @@ new Mapping\ClassType\CallableObjectFactory('some_factory');
 new Mapping\ClassType\CallableObjectFactory(fn() => new SomeClass());
 ```
 
+### CollectionType
+
+Коллекция (массив) из значений любого другого типа.
+
+```php
+use DobroSite\Mapping;
+
+$itemType = new Mapping\FloatType();
+$type = new Mapping\CollectionType($itemType);
+$type->toPhpValue(['123.45', '54.321']); // [123.45, 54.321]
+```
+
 ### CustomType
 
 Позволяет задать собственные произвольные правила преобразования с помощью функции.

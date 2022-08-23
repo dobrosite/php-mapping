@@ -22,6 +22,6 @@ final class SameTypeTest extends TypeTestCase
 
     protected function createType(mixed ...$parameters): Type
     {
-        return new SameType(...$parameters);
+        return new SameType();
     }
 }

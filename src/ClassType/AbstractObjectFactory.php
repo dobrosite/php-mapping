@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace DobroSite\Mapping\ClassType;
 
-use DobroSite\Mapping\Data\DataSet;
 use DobroSite\Mapping\Data\DataItem;
+use DobroSite\Mapping\Data\DataSet;
 use DobroSite\Mapping\DefaultValue;
 use DobroSite\Mapping\Exception\ConfigurationError;
 use DobroSite\Mapping\Exception\DataError;
@@ -54,7 +54,7 @@ abstract class AbstractObjectFactory implements ObjectFactory
         foreach ($properties as $property) {
             try {
                 $dataItem = $this->useAsValueFor($property, $data);
-            } catch (ValueNotSpecified|ValueAlreadyUsed) {
+            } catch (ValueNotSpecified | ValueAlreadyUsed) {
                 continue;
             }
             $property->setValue($object, $property->type->toPhpValue($dataItem->value));
