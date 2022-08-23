@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace DobroSite\Mapping\ClassType;
 
-use DobroSite\Mapping\Data;
-use DobroSite\Mapping\DataItem;
+use DobroSite\Mapping\Data\DataSet;
+use DobroSite\Mapping\Data\DataItem;
 use DobroSite\Mapping\DefaultValue;
 use DobroSite\Mapping\Exception\ConfigurationError;
 use DobroSite\Mapping\Exception\DataError;
@@ -17,7 +17,7 @@ abstract class AbstractObjectFactory implements ObjectFactory
     public function createObject(
         \ReflectionClass $class,
         Properties $properties,
-        Data $data
+        DataSet $data
     ): object {
         foreach ($properties as $property) {
             if ($property->defaultValue instanceof DefaultValue) {
@@ -39,7 +39,7 @@ abstract class AbstractObjectFactory implements ObjectFactory
     abstract protected function createInstance(
         \ReflectionClass $class,
         Properties $properties,
-        Data $data,
+        DataSet $data,
     ): object;
 
     /**
@@ -49,7 +49,7 @@ abstract class AbstractObjectFactory implements ObjectFactory
     protected function setObjectProperties(
         object $object,
         Properties $properties,
-        Data $data
+        DataSet $data
     ): void {
         foreach ($properties as $property) {
             try {
@@ -71,7 +71,7 @@ abstract class AbstractObjectFactory implements ObjectFactory
      */
     protected function useAsParameters(
         array $parameters,
-        Data $data,
+        DataSet $data,
         Properties $properties,
     ): array {
         $values = [];
@@ -100,7 +100,7 @@ abstract class AbstractObjectFactory implements ObjectFactory
      * @throws DataError
      * @throws ValueAlreadyUsed
      */
-    protected function useAsValueFor(Property $property, Data $data): DataItem
+    protected function useAsValueFor(Property $property, DataSet $data): DataItem
     {
         $item = $data->get($property->dataName);
         if ($item instanceof DataItem) {

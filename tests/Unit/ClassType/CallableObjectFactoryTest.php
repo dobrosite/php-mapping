@@ -7,7 +7,7 @@ namespace Tests\Unit\ClassType;
 use DobroSite\Mapping\ClassType\CallableObjectFactory;
 use DobroSite\Mapping\ClassType\Properties;
 use DobroSite\Mapping\ClassType\Property;
-use DobroSite\Mapping\Data;
+use DobroSite\Mapping\Data\DataSet;
 use DobroSite\Mapping\Exception\ConfigurationError;
 use PHPUnit\Framework\TestCase;
 use Tests\Fixture\ClassWithConstructor;
@@ -33,7 +33,7 @@ final class CallableObjectFactoryTest extends TestCase
                 new Property('foo'),
                 new Property('bar'),
             ),
-            new Data([
+            new DataSet([
                 'foo' => 'FOO',
                 'bar' => 'BAR',
             ])
@@ -58,7 +58,7 @@ final class CallableObjectFactoryTest extends TestCase
                 new Property('foo'),
                 new Property('bar'),
             ),
-            new Data([
+            new DataSet([
                 'foo' => 'FOO',
                 'bar' => 'BAR',
             ])
@@ -87,7 +87,7 @@ final class CallableObjectFactoryTest extends TestCase
         $factory->createObject(
             new \ReflectionClass(ClassWithoutConstructor::class),
             new Properties(),
-            new Data([])
+            new DataSet([])
         );
     }
 
@@ -109,7 +109,7 @@ final class CallableObjectFactoryTest extends TestCase
         $factory->createObject(
             new \ReflectionClass(ClassWithoutConstructor::class),
             new Properties(),
-            new Data([])
+            new DataSet([])
         );
     }
 
@@ -125,7 +125,7 @@ final class CallableObjectFactoryTest extends TestCase
                 new Property('foo'),
                 new Property('bar'),
             ),
-            new Data([
+            new DataSet([
                 'foo' => 'FOO',
                 'bar' => 'BAR',
             ])
@@ -156,7 +156,7 @@ final class CallableObjectFactoryTest extends TestCase
         $factory->createObject(
             new \ReflectionClass(ClassWithoutConstructor::class),
             new Properties(),
-            new Data([])
+            new DataSet([])
         );
     }
 
@@ -174,7 +174,7 @@ final class CallableObjectFactoryTest extends TestCase
                 new Property('foo'),
                 new Property('bar'),
             ),
-            new Data([
+            new DataSet([
                 'foo' => 'FOO',
                 'bar' => 'BAR',
             ])

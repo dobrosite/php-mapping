@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace DobroSite\Mapping\ClassType;
 
-use DobroSite\Mapping\Data;
+use DobroSite\Mapping\Data\DataSet;
 use DobroSite\Mapping\Exception\ConfigurationError;
 use DobroSite\Mapping\Exception\DataError;
 
@@ -27,7 +27,7 @@ final class CallableObjectFactory extends AbstractObjectFactory
     protected function createInstance(
         \ReflectionClass $class,
         Properties $properties,
-        Data $data
+        DataSet $data
     ): object {
         if (\is_array($this->callable)) {
             $parameters = self::getParametersForArrayFactory($this->callable);

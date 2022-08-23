@@ -7,7 +7,7 @@ namespace Tests\Unit\ClassType;
 use DobroSite\Mapping\ClassType\DefaultObjectFactory;
 use DobroSite\Mapping\ClassType\Properties;
 use DobroSite\Mapping\ClassType\Property;
-use DobroSite\Mapping\Data;
+use DobroSite\Mapping\Data\DataSet;
 use DobroSite\Mapping\DefaultValue;
 use DobroSite\Mapping\Exception\ConfigurationError;
 use DobroSite\Mapping\Exception\DataError;
@@ -34,7 +34,7 @@ final class DefaultObjectFactoryTest extends TestCase
                 new Property('foo'),
                 new Property('bar'),
             ),
-            new Data([
+            new DataSet([
                 'foo' => 'FOO',
                 'bar' => 'BAR',
             ])
@@ -57,7 +57,7 @@ final class DefaultObjectFactoryTest extends TestCase
                 new Property('foo'),
                 new Property('bar'),
             ),
-            new Data([
+            new DataSet([
                 'foo' => 'FOO',
                 'bar' => 'BAR',
             ])
@@ -83,7 +83,7 @@ final class DefaultObjectFactoryTest extends TestCase
         $factory->createObject(
             new \ReflectionClass(ClassWithPrivateConstructor::class),
             new Properties(),
-            new Data([])
+            new DataSet([])
         );
     }
 
@@ -100,7 +100,7 @@ final class DefaultObjectFactoryTest extends TestCase
         $factory->createObject(
             new \ReflectionClass(ClassWithConstructor::class),
             new Properties(new Property('foo')),
-            new Data([])
+            new DataSet([])
         );
     }
 
@@ -115,7 +115,7 @@ final class DefaultObjectFactoryTest extends TestCase
             new Properties(
                 new Property('foo'),
             ),
-            new Data([
+            new DataSet([
                 'foo' => 'FOO',
             ])
         );
@@ -137,7 +137,7 @@ final class DefaultObjectFactoryTest extends TestCase
                 new Property('foo'),
                 new Property('bar', defaultValue: new DefaultValue('DEFAULT')),
             ),
-            new Data([
+            new DataSet([
                 'foo' => 'FOO',
             ])
         );
@@ -159,7 +159,7 @@ final class DefaultObjectFactoryTest extends TestCase
                 new Property('foo'),
                 new Property('bar', defaultValue: new DefaultValue('DEFAULT')),
             ),
-            new Data([
+            new DataSet([
                 'foo' => 'FOO',
             ])
         );

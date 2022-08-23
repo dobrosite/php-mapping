@@ -8,6 +8,7 @@ use DobroSite\Mapping\ClassType\DefaultObjectFactory;
 use DobroSite\Mapping\ClassType\ObjectFactory;
 use DobroSite\Mapping\ClassType\Properties;
 use DobroSite\Mapping\ClassType\TargetClassResolver;
+use DobroSite\Mapping\Data\DataSet;
 use DobroSite\Mapping\Exception\ConfigurationError;
 use DobroSite\Mapping\Exception\DataError;
 
@@ -44,6 +45,6 @@ class ClassType implements Type
 
         $class = $this->targetClassResolver->getTargetClass($dataValue);
 
-        return $this->factory->createObject($class, $this->properties, new Data($dataValue));
+        return $this->factory->createObject($class, $this->properties, new DataSet($dataValue));
     }
 }
