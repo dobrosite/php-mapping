@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace DobroSite\Mapping;
 
-class SameType implements Type
+class SameType extends AbstractType
 {
     public function toPhpValue(mixed $dataValue): mixed
     {

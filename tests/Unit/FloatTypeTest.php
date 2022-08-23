@@ -70,9 +70,6 @@ final class FloatTypeTest extends TypeTestCase
 
     protected function createType(mixed ...$parameters): Type
     {
-        $formatter = $parameters[0] ?? null;
-        \assert($formatter instanceof \NumberFormatter || $formatter === null);
-
-        return new FloatType($formatter);
+        return new FloatType(...$parameters);
     }
 }

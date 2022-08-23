@@ -61,9 +61,6 @@ final class MapTypeTest extends TypeTestCase
 
     protected function createType(mixed ...$parameters): Type
     {
-        $map = $parameters[0] ?? null;
-        \assert(\is_array($map));
-
-        return new MapType($map);
+        return new MapType(...$parameters);
     }
 }

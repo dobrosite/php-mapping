@@ -23,9 +23,6 @@ final class EnumTypeTest extends TypeTestCase
 
     protected function createType(mixed ...$parameters): Type
     {
-        $type = $parameters[0] ?? null;
-        \assert(\is_string($type));
-
-        return new EnumType($type);
+        return new EnumType(...$parameters);
     }
 }

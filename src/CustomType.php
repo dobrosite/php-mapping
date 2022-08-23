@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace DobroSite\Mapping;
 
-class CustomType implements Type
+class CustomType extends AbstractType
 {
     /**
      * @var callable

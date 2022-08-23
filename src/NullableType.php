@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace DobroSite\Mapping;
 
-class NullableType implements Type
+class NullableType extends AbstractType
 {
     public function __construct(
         private readonly Type $mainType,

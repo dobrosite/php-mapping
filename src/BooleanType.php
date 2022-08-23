@@ -6,7 +6,7 @@ namespace DobroSite\Mapping;
 
 use DobroSite\Mapping\Exception\DataError;
 
-class BooleanType implements Type
+class BooleanType extends AbstractType
 {
     private readonly string $false;
 
@@ -36,8 +36,9 @@ class BooleanType implements Type
             $this->false => false,
             default => throw new DataError(
                 \sprintf(
-                    'Value "%s" is not allowed for the BooleanType. Allowed values are "%s" and "%s".',
+                    'Value "%s" is not allowed for the %s. Allowed values are "%s" and "%s".',
                     $dataValue,
+                    $this->getTypeName(),
                     $this->true,
                     $this->false
                 )

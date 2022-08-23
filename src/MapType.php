@@ -6,7 +6,7 @@ namespace DobroSite\Mapping;
 
 use DobroSite\Mapping\Exception\DataError;
 
-class MapType implements Type
+class MapType extends AbstractType
 {
     /**
      * @param array<int|string, mixed> $map
@@ -20,7 +20,11 @@ class MapType implements Type
     {
         if (!\is_int($dataValue) && !\is_string($dataValue)) {
             throw new DataError(
-                \sprintf('MapType supports string and int values only, %s given.', \gettype($dataValue))
+                \sprintf(
+                    '%s supports string and int values only, %s given.',
+                    $this->getTypeName(),
+                    \gettype($dataValue)
+                )
             );
         }
 

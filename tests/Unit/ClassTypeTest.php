@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit;
 
 use DobroSite\Mapping\ClassType;
-use DobroSite\Mapping\ClassType\ObjectFactory;
 use DobroSite\Mapping\ClassType\Properties;
-use DobroSite\Mapping\ClassType\TargetClassResolver;
 use DobroSite\Mapping\Type;
 use Tests\Fixture\ClassWithConstructor;
 
@@ -52,15 +50,6 @@ final class ClassTypeTest extends TypeTestCase
 
     protected function createType(mixed ...$parameters): Type
     {
-        $targetClassResolver = $parameters[0] ?? null;
-        \assert($targetClassResolver instanceof TargetClassResolver);
-
-        $properties = $parameters[1] ?? null;
-        \assert($properties instanceof Properties);
-
-        $factory = $parameters[2] ?? null;
-        \assert($factory instanceof ObjectFactory || $factory === null);
-
-        return new ClassType($targetClassResolver, $properties, $factory);
+        return new ClassType(...$parameters);
     }
 }

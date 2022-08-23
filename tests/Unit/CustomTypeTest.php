@@ -30,9 +30,6 @@ final class CustomTypeTest extends TypeTestCase
 
     protected function createType(mixed ...$parameters): Type
     {
-        $toPhpValue = $parameters[0] ?? null;
-        \assert(\is_callable($toPhpValue));
-
-        return new CustomType($toPhpValue);
+        return new CustomType(...$parameters);
     }
 }

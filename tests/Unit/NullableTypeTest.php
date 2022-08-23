@@ -34,9 +34,6 @@ final class NullableTypeTest extends TypeTestCase
 
     protected function createType(mixed ...$parameters): Type
     {
-        $mainType = $parameters[0] ?? null;
-        \assert($mainType instanceof Type);
-
-        return new NullableType($mainType);
+        return new NullableType(...$parameters);
     }
 }

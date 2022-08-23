@@ -6,7 +6,7 @@ namespace DobroSite\Mapping;
 
 use DobroSite\Mapping\Exception\DataError;
 
-class FloatType implements Type
+class FloatType extends AbstractType
 {
     private \NumberFormatter $formatter;
 
@@ -28,7 +28,8 @@ class FloatType implements Type
         if (!\is_string($dataValue)) {
             throw new DataError(
                 \sprintf(
-                    'Value for FloatType should be either integer, float or string, but %s given.',
+                    'Value for %s should be either integer, float or string, but %s given.',
+                    $this->getTypeName(),
                     \gettype($dataValue)
                 )
             );

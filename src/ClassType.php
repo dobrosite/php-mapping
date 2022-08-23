@@ -12,7 +12,7 @@ use DobroSite\Mapping\Data\DataSet;
 use DobroSite\Mapping\Exception\ConfigurationError;
 use DobroSite\Mapping\Exception\DataError;
 
-class ClassType implements Type
+class ClassType extends AbstractType
 {
     protected readonly ObjectFactory $factory;
 
