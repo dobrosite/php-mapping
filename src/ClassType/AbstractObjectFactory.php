@@ -79,17 +79,12 @@ abstract class AbstractObjectFactory implements ObjectFactory
         foreach ($parameters as $parameter) {
             \assert($parameter instanceof \ReflectionParameter);
 
-            $property = $properties->findByPropertyName($parameter->getName());
-
-            try {
-                $dataItem = $this->useAsValueFor($property, $data);
-            } catch (ValueNotSpecified $exception) {
-                if ($parameter->isDefaultValueAvailable()) {
-                    continue;
-                }
-                throw $exception;
+            if ($parameter->isDefaultValueAvailable()) {
+                $data->setDefaultValue($parameter->getName(), $parameter->getDefaultValue());
             }
 
+            $property = $properties->findByPropertyName($parameter->getName());
+            $dataItem = $this->useAsValueFor($property, $data);
             $values[] = $property->type->toPhpValue($dataItem->value);
         }
 

@@ -11,6 +11,13 @@ final class ClassWithConstructor
         return new self($foo, $bar);
     }
 
+    public static function withOptionals(
+        string $foo = 'Default foo',
+        string $bar = 'Default bar'
+    ): self {
+        return new self($foo, $bar);
+    }
+
     public function __construct(
         private readonly string $foo,
         private readonly string $bar = 'default',
