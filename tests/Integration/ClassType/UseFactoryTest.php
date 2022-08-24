@@ -23,9 +23,11 @@ final class UseFactoryTest extends TestCase
             new ClassType\Properties(
                 new ClassType\Property(
                     propertyName: 'foo',
+                    dataName: 'Foo',
                 ),
                 new ClassType\Property(
                     propertyName: 'bar',
+                    dataName: 'Bar',
                 ),
             ),
             factory: new ClassType\CallableObjectFactory([
@@ -33,7 +35,7 @@ final class UseFactoryTest extends TestCase
                 'withOptionals',
             ])
         );
-        $object = $class->toPhpValue(['bar' => 'BAR']);
+        $object = $class->toPhpValue(['Bar' => 'BAR']);
 
         self::assertInstanceOf(ClassWithConstructor::class, $object);
         self::assertSame('Default foo', $object->getFoo());
