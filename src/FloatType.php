@@ -8,7 +8,7 @@ use DobroSite\Mapping\Exception\DataError;
 
 class FloatType extends AbstractType
 {
-    private \NumberFormatter $formatter;
+    private readonly \NumberFormatter $formatter;
 
     public function __construct(
         \NumberFormatter $formatter = null

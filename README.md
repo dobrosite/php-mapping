@@ -66,6 +66,23 @@ $object = $class->toPhpType(['foo' => 'FOO', 'bar' => 'BAR']);
 new Mapping\ClassType\ClassName(SomeClass::class)
 ```
 
+##### ClassNameMap
+
+Определяет имя класса на основе карты соответствия.
+
+```ephp
+new Mapping\ClassType\ClassNameMap(
+    'Type',
+    [
+        'runtime' => \RuntimeException::class,
+        'logic' => \LogicException::class,
+    ]
+)
+```
+
+Если во входных данных у параметра `Type` будет значение `runtime`, вернёт `RuntimeException`, если
+`logic` — вернёт `LogicException`.
+
 #### Свойства
 
 Список отображаемых свойств задаётся с помощью класса [Properties](src/ClassType/Properties.php),

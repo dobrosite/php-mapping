@@ -6,7 +6,7 @@ namespace Tests\Fixture;
 
 final class SyntheticConstructor
 {
-    private string $combined;
+    private readonly string $combined;
 
     public static function new(string $foo, string $bar): self
     {
