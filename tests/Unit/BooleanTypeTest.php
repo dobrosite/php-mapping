@@ -6,7 +6,6 @@ namespace Tests\Unit;
 
 use DobroSite\Mapping\BooleanType;
 use DobroSite\Mapping\Exception\DataError;
-use DobroSite\Mapping\FloatType;
 use DobroSite\Mapping\Type;
 
 /**
@@ -14,7 +13,7 @@ use DobroSite\Mapping\Type;
  */
 final class BooleanTypeTest extends TypeTestCase
 {
-    public static function toPhpDataProvider(): iterable
+    public static function toPhpValueDataProvider(): iterable
     {
         return [
             'true' => [
@@ -56,6 +55,42 @@ final class BooleanTypeTest extends TypeTestCase
                 'givenValue' => 'НЕТ',
                 'expectedValue' => false,
                 'arguments' => ['да', 'нет'],
+            ],
+        ];
+    }
+
+    public static function toDataValueDataProvider(): iterable
+    {
+        return [
+            'true' => [
+                'givenValue' => true,
+                'expectedValue' => 'true',
+                'arguments' => [],
+            ],
+            'false' => [
+                'givenValue' => false,
+                'expectedValue' => 'false',
+                'arguments' => [],
+            ],
+            'да → true' => [
+                'givenValue' => true,
+                'expectedValue' => 'да',
+                'arguments' => ['да', 'нет'],
+            ],
+            'нет → false' => [
+                'givenValue' => false,
+                'expectedValue' => 'нет',
+                'arguments' => ['да', 'нет'],
+            ],
+            '1 → true' => [
+                'givenValue' => true,
+                'expectedValue' => 1,
+                'arguments' => ['1', '0'],
+            ],
+            '0 → false' => [
+                'givenValue' => false,
+                'expectedValue' => 0,
+                'arguments' => ['1', '0'],
             ],
         ];
     }

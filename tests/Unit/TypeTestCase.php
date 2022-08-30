@@ -10,20 +10,47 @@ use PHPUnit\Framework\TestCase;
 abstract class TypeTestCase extends TestCase
 {
     /**
+     * Поставщик данных для {@see testToDataValue}.
+     *
+     * @return iterable<string, array<mixed>>
+     *
+     * @throws \Throwable
+     */
+    abstract public static function toDataValueDataProvider(): iterable;
+
+    /**
      * Поставщик данных для {@see testToPhpValue}.
      *
      * @return iterable<string, array<mixed>>
      *
      * @throws \Throwable
      */
-    abstract public static function toPhpDataProvider(): iterable;
+    abstract public static function toPhpValueDataProvider(): iterable;
 
     /**
      * @param array<mixed> $createTypeParams
      *
      * @throws \Throwable
      *
-     * @dataProvider toPhpDataProvider
+     * @dataProvider toDataValueDataProvider
+     */
+    public function testToDataValue(
+        mixed $givenValue,
+        mixed $expectedValue,
+        array $createTypeParams = []
+    ): void {
+        self::assertEquals(
+            $expectedValue,
+            $this->createType(...$createTypeParams)->toDataValue($givenValue)
+        );
+    }
+
+    /**
+     * @param array<mixed> $createTypeParams
+     *
+     * @throws \Throwable
+     *
+     * @dataProvider toPhpValueDataProvider
      */
     public function testToPhpValue(
         mixed $givenValue,

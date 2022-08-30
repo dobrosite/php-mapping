@@ -13,7 +13,33 @@ use DobroSite\Mapping\Type;
  */
 final class FloatTypeTest extends TypeTestCase
 {
-    public static function toPhpDataProvider(): iterable
+    public static function toDataValueDataProvider(): iterable
+    {
+        return [
+            'Без дробной части (en)' => [
+                'givenValue' => 1_234_567.00,
+                'expectedValue' => '1,234,567',
+                'arguments' => [new \NumberFormatter('en', \NumberFormatter::DEFAULT_STYLE)],
+            ],
+            'С дробной частью (en)' => [
+                'givenValue' => 1_234_567.89,
+                'expectedValue' => '1,234,567.89',
+                'arguments' => [new \NumberFormatter('en', \NumberFormatter::DEFAULT_STYLE)],
+            ],
+            'Без дробной части (ru_RU)' => [
+                'givenValue' => 1_234_567.00,
+                'expectedValue' => '1 234 567',
+                'arguments' => [new \NumberFormatter('ru_RU', \NumberFormatter::DEFAULT_STYLE)],
+            ],
+            'С дробной частью (ru_RU)' => [
+                'givenValue' => 1_234_567.89,
+                'expectedValue' => '1 234 567,89',
+                'arguments' => [new \NumberFormatter('ru_RU', \NumberFormatter::DEFAULT_STYLE)],
+            ],
+        ];
+    }
+
+    public static function toPhpValueDataProvider(): iterable
     {
         return [
             'Целое число' => [
@@ -55,7 +81,7 @@ final class FloatTypeTest extends TypeTestCase
     /**
      * @throws \Throwable
      */
-    public function testInvalidValueType(): void
+    public function testInvalidDataValueType(): void
     {
         $type = new FloatType();
 
@@ -66,6 +92,20 @@ final class FloatTypeTest extends TypeTestCase
         );
 
         $type->toPhpValue(null);
+    }
+
+    /**
+     * @throws \Throwable
+     */
+    public function testInvalidPhpValueType(): void
+    {
+        $type = new FloatType();
+
+        $this->expectExceptionObject(
+            new DataError('PHP value for FloatType should float, but string given.')
+        );
+
+        $type->toDataValue('123.45');
     }
 
     protected function createType(mixed ...$parameters): Type

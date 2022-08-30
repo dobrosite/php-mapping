@@ -16,6 +16,28 @@ class MapType extends AbstractType
     ) {
     }
 
+    public function toDataValue(mixed $phpValue): int | string
+    {
+        $key = \array_search($phpValue, $this->map, true);
+        if (\is_string($key) || \is_int($key)) {
+            return $key;
+        }
+
+        throw new DataError(
+            \sprintf(
+                'Value %s is not in the map. Available values are: %s.',
+                \var_export($phpValue, true),
+                \implode(
+                    ', ',
+                    \array_map(
+                        static fn(mixed $value) => \var_export($value, true),
+                        \array_values($this->map)
+                    )
+                )
+            )
+        );
+    }
+
     public function toPhpValue(mixed $dataValue): mixed
     {
         if (!\is_int($dataValue) && !\is_string($dataValue)) {

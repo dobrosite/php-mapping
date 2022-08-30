@@ -13,5 +13,11 @@ interface Type
      * @throws ConfigurationError
      * @throws DataError
      */
+    public function toDataValue(mixed $phpValue): mixed;
+
+    /**
+     * @throws ConfigurationError
+     * @throws DataError
+     */
     public function toPhpValue(mixed $dataValue): mixed;
 }

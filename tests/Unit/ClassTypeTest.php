@@ -6,6 +6,7 @@ namespace Tests\Unit;
 
 use DobroSite\Mapping\ClassType;
 use DobroSite\Mapping\ClassType\Properties;
+use DobroSite\Mapping\Exception\DataError;
 use DobroSite\Mapping\Type;
 use Tests\Fixture\ClassWithConstructor;
 
@@ -14,7 +15,26 @@ use Tests\Fixture\ClassWithConstructor;
  */
 final class ClassTypeTest extends TypeTestCase
 {
-    public static function toPhpDataProvider(): iterable
+    public static function toDataValueDataProvider(): iterable
+    {
+        $object = new \stdClass();
+        $object->foo = 'Foo';
+        $object->bar = 'Bar';
+
+        yield \stdClass::class => [
+            'givenValue' => $object,
+            'expectedValue' => ['foo' => 'Foo', 'bar' => 'Bar'],
+            'parameters' => [
+                new ClassType\ClassName(ClassWithConstructor::class),
+                new ClassType\Properties(
+                    new ClassType\Property('foo'),
+                    new ClassType\Property('bar'),
+                ),
+            ],
+        ];
+    }
+
+    public static function toPhpValueDataProvider(): iterable
     {
         yield \stdClass::class => [
             'givenValue' => [
@@ -27,6 +47,23 @@ final class ClassTypeTest extends TypeTestCase
                 new ClassType\Properties(),
             ],
         ];
+    }
+
+    /**
+     * @throws \Throwable
+     */
+    public function testNotAnObject(): void
+    {
+        $type = new ClassType(
+            new ClassType\ClassName(ClassWithConstructor::class),
+            new ClassType\Properties(),
+        );
+
+        $this->expectExceptionObject(
+            new DataError('PHP value for ClassType should be an object, string given.')
+        );
+
+        $type->toDataValue('foo');
     }
 
     /**

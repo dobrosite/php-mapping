@@ -25,7 +25,29 @@ class Property
     /**
      * @throws ConfigurationError
      */
+    public function getValue(object $object): mixed
+    {
+        return $this->getPropertyReflection($object)->getValue($object);
+    }
+
+    /**
+     * @throws ConfigurationError
+     */
     public function setValue(object $object, mixed $value): void
+    {
+        $reflection = $this->getPropertyReflection($object);
+
+        if ($reflection->isReadOnly()) {
+            return;
+        }
+
+        $reflection->setValue($object, $value);
+    }
+
+    /**
+     * @throws ConfigurationError
+     */
+    private function getPropertyReflection(object $object): \ReflectionProperty
     {
         try {
             $reflection = new \ReflectionProperty($object, $this->propertyName);
@@ -40,10 +62,6 @@ class Property
             );
         }
 
-        if ($reflection->isReadOnly()) {
-            return;
-        }
-
-        $reflection->setValue($object, $value);
+        return $reflection;
     }
 }

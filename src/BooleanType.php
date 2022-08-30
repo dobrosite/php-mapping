@@ -20,6 +20,14 @@ class BooleanType extends AbstractType
         $this->false = \mb_strtolower($false, 'utf8');
     }
 
+    public function toDataValue(mixed $phpValue): string
+    {
+        return match ((bool) $phpValue) {
+            true => $this->true,
+            false => $this->false,
+        };
+    }
+
     public function toPhpValue(mixed $dataValue): bool
     {
         if (!\is_scalar($dataValue)) {

@@ -19,6 +19,21 @@ class FloatType extends AbstractType
         );
     }
 
+    public function toDataValue(mixed $phpValue): string
+    {
+        if (!\is_float($phpValue)) {
+            throw new DataError(
+                \sprintf(
+                    'PHP value for %s should float, but %s given.',
+                    $this->getTypeName(),
+                    \gettype($phpValue)
+                )
+            );
+        }
+
+        return (string) $this->formatter->format($phpValue);
+    }
+
     public function toPhpValue(mixed $dataValue): mixed
     {
         if (\is_int($dataValue) || \is_float($dataValue)) {

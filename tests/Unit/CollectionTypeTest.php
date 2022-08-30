@@ -15,7 +15,27 @@ use DobroSite\Mapping\Type;
  */
 final class CollectionTypeTest extends TypeTestCase
 {
-    public static function toPhpDataProvider(): iterable
+    public static function toDataValueDataProvider(): iterable
+    {
+        return [
+            SameType::class => [
+                'givenValue' => ['foo', 'bar'],
+                'expectedValue' => ['foo', 'bar'],
+                'arguments' => [new SameType()],
+            ],
+            FloatType::class => [
+                'givenValue' => [123.45, 54.321],
+                'expectedValue' => ['123.45', '54.321'],
+                'arguments' => [
+                    new FloatType(
+                        new \NumberFormatter('en', \NumberFormatter::DEFAULT_STYLE)
+                    ),
+                ],
+            ],
+        ];
+    }
+
+    public static function toPhpValueDataProvider(): iterable
     {
         return [
             SameType::class => [

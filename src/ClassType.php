@@ -7,6 +7,7 @@ namespace DobroSite\Mapping;
 use DobroSite\Mapping\ClassType\DefaultObjectFactory;
 use DobroSite\Mapping\ClassType\ObjectFactory;
 use DobroSite\Mapping\ClassType\Properties;
+use DobroSite\Mapping\ClassType\Property;
 use DobroSite\Mapping\ClassType\TargetClassResolver;
 use DobroSite\Mapping\Data\DataSet;
 use DobroSite\Mapping\Exception\ConfigurationError;
@@ -25,6 +26,37 @@ class ClassType extends AbstractType
             $factory = new DefaultObjectFactory();
         }
         $this->factory = $factory;
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     *
+     * @throws ConfigurationError
+     * @throws DataError
+     */
+    public function toDataValue(mixed $phpValue): ?array
+    {
+        if ($phpValue === null) {
+            return null;
+        }
+
+        if (!\is_object($phpValue)) {
+            throw new DataError(
+                \sprintf(
+                    'PHP value for ClassType should be an object, %s given.',
+                    \gettype($phpValue)
+                )
+            );
+        }
+
+        $view = [];
+
+        foreach ($this->properties as $property) {
+            \assert($property instanceof Property);
+            $view[$property->dataName] = $property->getValue($phpValue);
+        }
+
+        return $view;
     }
 
     /**

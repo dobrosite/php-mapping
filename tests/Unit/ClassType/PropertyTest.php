@@ -25,6 +25,18 @@ final class PropertyTest extends TestCase
     /**
      * @throws \Throwable
      */
+    public function testGetValue(): void
+    {
+        $object = new \stdClass();
+        $object->foo = 'FOO';
+
+        $property = new Property(propertyName: 'foo', dataName: 'Foo');
+        self::assertSame('FOO', $property->getValue($object));
+    }
+
+    /**
+     * @throws \Throwable
+     */
     public function testSetAdHocPublicValue(): void
     {
         $object = new \stdClass();

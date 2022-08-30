@@ -11,6 +11,13 @@ class NullableType extends AbstractType
     ) {
     }
 
+    public function toDataValue(mixed $phpValue): mixed
+    {
+        return $phpValue === null
+            ? null
+            : $this->mainType->toDataValue($phpValue);
+    }
+
     public function toPhpValue(mixed $dataValue): mixed
     {
         return $dataValue === null

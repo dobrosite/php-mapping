@@ -13,6 +13,11 @@ class CollectionType extends AbstractType
     ) {
     }
 
+    public function toDataValue(mixed $phpValue): mixed
+    {
+        return $phpValue;
+    }
+
     public function toPhpValue(mixed $dataValue): mixed
     {
         if (!\is_array($dataValue)) {

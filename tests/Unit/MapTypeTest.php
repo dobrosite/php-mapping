@@ -13,7 +13,23 @@ use DobroSite\Mapping\Type;
  */
 final class MapTypeTest extends TypeTestCase
 {
-    public static function toPhpDataProvider(): iterable
+    public static function toDataValueDataProvider(): iterable
+    {
+        return [
+            'foo ← bar' => [
+                'givenValue' => 'bar',
+                'expectedValue' => 'foo',
+                'arguments' => [['foo' => 'bar', 'bar' => 'baz']],
+            ],
+            'bar ← baz' => [
+                'givenValue' => 'baz',
+                'expectedValue' => 'bar',
+                'arguments' => [['foo' => 'bar', 'bar' => 'baz']],
+            ],
+        ];
+    }
+
+    public static function toPhpValueDataProvider(): iterable
     {
         return [
             'foo → bar' => [
@@ -48,7 +64,7 @@ final class MapTypeTest extends TypeTestCase
     /**
      * @throws \Throwable
      */
-    public function testMissedVariant(): void
+    public function testMissedDataVariant(): void
     {
         $type = new MapType(['a' => true, 'b' => false]);
 
@@ -57,6 +73,21 @@ final class MapTypeTest extends TypeTestCase
         );
 
         $type->toPhpValue('foo');
+    }
+
+
+    /**
+     * @throws \Throwable
+     */
+    public function testMissedPhpVariant(): void
+    {
+        $type = new MapType(['a' => true, 'b' => false]);
+
+        $this->expectExceptionObject(
+            new DataError('Value 1 is not in the map. Available values are: true, false.')
+        );
+
+        $type->toDataValue(1);
     }
 
     protected function createType(mixed ...$parameters): Type

@@ -12,18 +12,34 @@ use DobroSite\Mapping\Type;
  */
 final class CustomTypeTest extends TypeTestCase
 {
-    public static function toPhpDataProvider(): iterable
+    public static function toDataValueDataProvider(): iterable
+    {
+        return [
+            'Имя функции' => [
+                'givenValue' => 'FOO',
+                'expectedValue' => 'foo',
+                'arguments' => ['strtoupper', 'strtolower'],
+            ],
+            'Анонимная функция' => [
+                'givenValue' => 'FOO',
+                'expectedValue' => 'foo',
+                'arguments' => [fn() => null, fn(string $value): string => \strtolower($value)],
+            ],
+        ];
+    }
+
+    public static function toPhpValueDataProvider(): iterable
     {
         return [
             'Имя функции' => [
                 'givenValue' => 'foo',
                 'expectedValue' => 'FOO',
-                'arguments' => ['strtoupper'],
+                'arguments' => ['strtoupper', 'strtolower'],
             ],
             'Анонимная функция' => [
                 'givenValue' => 'FOO',
                 'expectedValue' => 'foo',
-                'arguments' => [fn(string $value): string => \strtolower($value)],
+                'arguments' => [fn(string $value): string => \strtolower($value), fn() => null],
             ],
         ];
     }

@@ -12,7 +12,15 @@ use DobroSite\Mapping\Type;
  */
 final class SameTypeTest extends TypeTestCase
 {
-    public static function toPhpDataProvider(): iterable
+    public static function toDataValueDataProvider(): iterable
+    {
+        return [
+            'Строка' => ['foo', 'foo'],
+            'Целое число' => [123, 123],
+        ];
+    }
+
+    public static function toPhpValueDataProvider(): iterable
     {
         return [
             'Строка' => ['foo', 'foo'],
