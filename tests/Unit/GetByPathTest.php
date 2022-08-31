@@ -16,6 +16,9 @@ use function DobroSite\Mapping\getByPath;
  */
 final class GetByPathTest extends TestCase
 {
+    /**
+     * @return iterable<int, array<string, mixed>>
+     */
     public static function dataProvider(): iterable
     {
         $data = [
@@ -52,6 +55,8 @@ final class GetByPathTest extends TestCase
     }
 
     /**
+     * @param array<mixed> $data
+     *
      * @throws \Throwable
      *
      * @dataProvider dataProvider
@@ -66,7 +71,9 @@ final class GetByPathTest extends TestCase
      */
     public function testPathNotExists(): void
     {
-        $this->expectExceptionObject(new DataError('Part "bar" of path "foo.bar" does not exists.'));
+        $this->expectExceptionObject(
+            new DataError('Part "bar" of path "foo.bar" does not exists.')
+        );
         getByPath('foo.bar', ['foo' => []]);
     }
 }

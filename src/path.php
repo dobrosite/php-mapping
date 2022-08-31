@@ -7,6 +7,8 @@ namespace DobroSite\Mapping;
 use DobroSite\Mapping\Exception\DataError;
 
 /**
+ * @param array<string, mixed> $data
+ *
  * @throws DataError
  */
 function getByPath(string $path, array $data): mixed

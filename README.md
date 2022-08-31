@@ -258,3 +258,17 @@ new Mapping\ClassType(
     )
 );
 ```
+
+## Полиморфизм
+
+`TODO`
+
+- [OneOf](src/OneOf.php)
+  - [OneOf\ByDiscriminator](src/OneOf/ByDiscriminator.php)
+  - [OneOf\ByExistedField](src/OneOf/ByExistedField.php)
+
+## Расхождения в структуре
+
+`TODO`
+
+- [Path\SubPath](src/Path/SubPath.php)

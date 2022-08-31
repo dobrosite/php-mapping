@@ -6,5 +6,5 @@ namespace Tests\Fixture;
 
 final class Recursive
 {
-    public ?Recursive $child;
+    public ?Recursive $child = null;
 }

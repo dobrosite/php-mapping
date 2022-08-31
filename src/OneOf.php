@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace DobroSite\Mapping;
 
-use DobroSite\Mapping\Exception\ConfigurationError;
 use DobroSite\Mapping\Exception\DataError;
 use DobroSite\Mapping\OneOf\Selector;
 
@@ -13,7 +12,7 @@ final class OneOf extends AbstractType
     /**
      * @var Selector[]
      */
-    private array $variants;
+    private readonly array $variants;
 
     public function __construct(Selector ...$variants)
     {
@@ -22,7 +21,7 @@ final class OneOf extends AbstractType
 
     public function toDataValue(mixed $phpValue): mixed
     {
-        // TODO
+        return null; // FIXME
     }
 
     public function toPhpValue(mixed $dataValue): mixed
@@ -32,5 +31,9 @@ final class OneOf extends AbstractType
                 return $variant->getType()->toPhpValue($dataValue);
             }
         }
+
+        throw new DataError(
+            \sprintf('Input data does not matches any of %s variants.', $this->getTypeName())
+        );
     }
 }
