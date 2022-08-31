@@ -75,7 +75,10 @@
     "autoload": {
         "psr-4": {
             "DobroSite\\Mapping\\": "src"
-        }
+        },
+        "files": [
+            "src/path.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

@@ -8,7 +8,13 @@
 
 ### Добавлено
 
-- Класс `OneOf\ByDataName`.
+- Добавлены интерфейсы
+  - `OneOf\Selector`
+- Добавлены классы
+  - `OneOf`.
+  - `OneOf\ByDiscriminator`.
+  - `OneOf\ByExistedField`.
+  - `Path\SubPath`.
 
 
 ## 0.6.1 - 31.08.2022
