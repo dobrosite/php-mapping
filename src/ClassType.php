@@ -53,8 +53,22 @@ class ClassType extends AbstractType
 
         foreach ($this->properties as $property) {
             \assert($property instanceof Property);
-            $view[$property->dataName]
-                = $property->type->toDataValue($property->getValue($phpValue));
+            $value = $property->getValue($phpValue);
+            try {
+                $dataValue = $property->type->toDataValue($value);
+            } catch (DataError $exception) {
+                throw new ConfigurationError(
+                    \sprintf(
+                        'Cannot transform value %s of property "%s" to data value for "%s" field.',
+                        formatValue($value),
+                        $property->propertyName,
+                        $property->dataName
+                    ),
+                    0,
+                    $exception
+                );
+            }
+            $view[$property->dataName] = $dataValue;
         }
 
         return $view;

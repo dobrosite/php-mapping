@@ -6,9 +6,13 @@ namespace Tests\Unit;
 
 use DobroSite\Mapping\ClassType;
 use DobroSite\Mapping\ClassType\Properties;
+use DobroSite\Mapping\EnumType;
+use DobroSite\Mapping\Exception\ConfigurationError;
 use DobroSite\Mapping\Exception\DataError;
 use DobroSite\Mapping\Type;
 use Tests\Fixture\ClassWithConstructor;
+use Tests\Fixture\Foo;
+use Tests\Fixture\TestEnum;
 
 /**
  * @covers \DobroSite\Mapping\ClassType
@@ -64,6 +68,34 @@ final class ClassTypeTest extends TypeTestCase
         );
 
         $type->toDataValue('foo');
+    }
+
+    /**
+     * @throws \Throwable
+     */
+    public function testToDataValuePropertyException(): void
+    {
+        $type = new ClassType(
+            new ClassType\ClassName(Foo::class),
+            new Properties(
+                new ClassType\Property(
+                    propertyName: 'foo',
+                    dataName: 'Foo',
+                    type: new EnumType(TestEnum::class),
+                ),
+            ),
+        );
+
+        $this->expectExceptionObject(
+            new ConfigurationError(
+                'Cannot transform value NULL of property "foo" to data value for "Foo" field.'
+            )
+        );
+
+        $object = new Foo();
+        $object->foo = null;
+
+        $type->toDataValue($object);
     }
 
     /**

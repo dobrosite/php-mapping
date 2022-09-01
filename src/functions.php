@@ -31,3 +31,12 @@ function getByPath(string $path, array $data): mixed
 
     return $data;
 }
+
+function formatValue(mixed $value): string
+{
+    if (\is_object($value)) {
+        return 'instance of ' . $value::class;
+    }
+
+    return \var_export($value, true);
+}

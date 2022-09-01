@@ -77,7 +77,7 @@
             "DobroSite\\Mapping\\": "src"
         },
         "files": [
-            "src/path.php"
+            "src/functions.php"
         ]
     },
     "autoload-dev": {
