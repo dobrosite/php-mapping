@@ -10,10 +10,10 @@ class Callback implements Mapper
 
     protected mixed $output;
 
-    public function __construct(callable $input, callable $output)
+    public function __construct(callable $input = null, callable $output = null)
     {
-        $this->input = $input;
-        $this->output = $output;
+        $this->input = $input ?: static fn($source) => $source;
+        $this->output = $output ?: static fn($source) => $source;
     }
 
     public function input(mixed $source): mixed

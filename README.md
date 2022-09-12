@@ -29,7 +29,29 @@ public function output(mixed $source): mixed;
 
 Выполняет обратное действие.
 
+## Примеры
+
+`TODO`
+
 ## Справочник классов
+
+### Apply
+
+Применяет ко входным данным преобразователь, полученный от другого преобразователя.
+
+```php
+use DobroSite\Mapping;
+
+$mapper = new Mapping\Apply(
+  input: new Mapping\Callback(
+    input: fn(mixed $source) => is_numeric($source) ? new Mapping\FloatType() : new Mapping\AsIs(),
+    output: fn(mixed $source) => is_float($source) ? new Mapping\FloatType() : new Mapping\AsIs(),
+  )
+);
+
+$mapper->input('123.45'); // 123.45
+$mapper->input('foo'); // 'foo'
+```
 
 ### ArrayDefaults
 
