@@ -26,7 +26,7 @@ class ArrayDefaults implements Mapper
         checkSourceType($this, 'input', ['array'], $source);
         \assert(\is_array($source));
 
-        return \array_merge($source, $this->defaults);
+        return \array_merge($this->defaults, $source);
     }
 
     /**

@@ -23,6 +23,13 @@ final class ArrayDefaultsTest extends MapperTestCase
                     ['bar' => 'bar value'],
                 ],
             ],
+            [
+                'given' => ['foo' => 'foo value', 'bar' => 'bar value'],
+                'expected' => ['foo' => 'foo value', 'bar' => 'bar value'],
+                'arguments' => [
+                    ['bar' => 'default value'],
+                ],
+            ],
         ];
     }
 
