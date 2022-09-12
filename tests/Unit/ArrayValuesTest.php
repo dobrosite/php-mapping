@@ -50,12 +50,7 @@ final class ArrayValuesTest extends MapperTestCase
     public function testInputKeyNotExists(): void
     {
         $mapper = new ArrayValues(['foo' => new AsIs()]);
-
-        $this->expectExceptionObject(
-            new InsufficientInput('There is no "foo" field in the input data.')
-        );
-
-        $mapper->input([]);
+        self::assertSame([], $mapper->input([]));
     }
 
     public function testInvalidInputType(): void

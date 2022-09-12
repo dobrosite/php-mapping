@@ -29,12 +29,9 @@ class ArrayValues implements Mapper
         \assert(\is_array($source));
 
         foreach ($this->mappers as $name => $mapper) {
-            if (!\array_key_exists($name, $source)) {
-                throw new InsufficientInput(
-                    \sprintf('There is no "%s" field in the input data.', $name)
-                );
+            if (\array_key_exists($name, $source)) {
+                $source[$name] = $mapper->input($source[$name]);
             }
-            $source[$name] = $mapper->input($source[$name]);
         }
 
         return $source;
