@@ -17,13 +17,13 @@
 
 Сердцем библиотеки является интерфейс [Mapper](src/Mapper.php), содержащий всего два метода:
 
-```injectablephp
+```php
 public function input(mixed $source): mixed;
 ```
 
 Отображает входные данные `$source` на структуру PHP и возвращает её. 
 
-```injectablephp
+```php
 public function output(mixed $source): mixed;
 ```
 
@@ -35,7 +35,7 @@ public function output(mixed $source): mixed;
 
 Позволяет задать значения по умолчанию для ключей, отсутствующих во входном массиве.
 
-```injectablephp
+```php
 use DobroSite\Mapping;
 
 $mapper = new Mapping\ArrayDefaults([
@@ -50,7 +50,7 @@ $mapper->input(['foo' => 'foo value']);
 
 Применяет указанное преобразование последовательно к каждому ключу ассоциативного массива. 
 
-```injectablephp
+```php
 use DobroSite\Mapping;
 
 $mapper = new Mapping\ArrayKeys(
@@ -71,7 +71,7 @@ $mapper->output(['foo' => 'foo value', 'bar' => 'bar value']);
 
 Меняет имена ключей массива на основе карты соответствия.
 
-```injectablephp
+```php
 use DobroSite\Mapping;
 
 $mapper = new Mapping\ArrayKeysMap([
@@ -90,7 +90,7 @@ $mapper->output(['foo' => 'foo value', 'bar' => 'bar value']);
 
 Применяет преобразования к указанным значениям ассоциативного массива.
 
-```injectablephp
+```php
 use DobroSite\Mapping;
 
 $mapper = new Mapping\ArrayValues([
@@ -105,7 +105,7 @@ $mapper->output(['active' => true]); // ['active' => 'yes']
 
 Оставляет значения как они есть.
 
-```injectablephp
+```php
 use DobroSite\Mapping;
 
 $mapper = new Mapping\AsIs();
@@ -117,7 +117,7 @@ $mapper->output('foo'); // 'foo'
 
 Преобразовывает значение в булев тип.
 
-```injectablephp
+```php
 use DobroSite\Mapping;
 
 $mapper = new Mapping\BooleanType();
@@ -133,7 +133,7 @@ $mapper->output(false); // 'нет'
 
 Позволяет использовать для преобразования функции обратного вызова.
 
-```injectablephp
+```php
 use DobroSite\Mapping;
 
 $mapper = new Mapping\Callback(
@@ -150,7 +150,7 @@ $mapper->output('foo'); // 'FOO'
 Создаёт цепочку преобразований, выполняемых последовательно: в `input` от первого к последнему,
 в `output` — в обратном порядке.
 
-```injectablephp
+```php
 use DobroSite\Mapping;
 
 $mapper = new Mapping\Chained(
@@ -164,7 +164,7 @@ $mapper = new Mapping\Chained(
 
 Возвращает константное значение.
 
-```injectablephp
+```php
 use DobroSite\Mapping;
 
 $mapper = new Mapping\Constant(input: 'foo', output: 'bar');
@@ -176,7 +176,7 @@ $mapper->output(uniqid()); // 'bar'
 
 Преобразовывает значения перечисляемых типов.
 
-```injectablephp
+```php
 use App\SomeEnum;
 use DobroSite\Mapping;
 
@@ -189,7 +189,7 @@ $mapper->output(SomeEnum::Foo); // 'foo'
 
 Преобразовывает значение в вещественное число.
 
-```injectablephp
+```php
 use DobroSite\Mapping;
 
 $mapper = new Mapping\FloatType();
@@ -205,7 +205,7 @@ $mapper->input('1 234,56'); // 1_234.56
 
 Преобразовывает значение на основе карты (ассоциативного массива).
 
-```injectablephp
+```php
 use DobroSite\Mapping;
 
 $mapper = new Mapping\Map(['foo' => 'bar']);
@@ -217,7 +217,7 @@ $mapper->output('bar'); // 'foo'
 
 Модификатор для других преобразователей, разрешающий им принимать значение `null`.
 
-```injectablephp
+```php
 use DobroSite\Mapping;
 
 $float = new Mapping\FloatType();
@@ -238,7 +238,7 @@ _Подробнее см. «Работа с объектами» ниже._
 который вернёт имя класса создаваемого объекта. 
 
 
-```injectablephp
+```php
 use App\Foo;
 use DobroSite\Mapping;
 
@@ -246,7 +246,7 @@ $mapper = new Mapping\ObjectConstructor(Mapping\Constant(Foo::class));
 $instanceOfFoo = $mapper->input(['foo' => 'foo value']);
 ```
 
-```injectablephp
+```php
 use App\Foo;
 use App\Bar;
 use DobroSite\Mapping;
@@ -270,7 +270,7 @@ _Подробнее см. «Работа с объектами» ниже._
 В качестве аргумента `$factory` в конструктор `ObjectFactory` следует передать фабрику для создания
 нужных объектов.
 
-```injectablephp
+```php
 use DobroSite\Mapping;
 
 $mapper = new Mapping\ObjectFactory('\App\factory_function');

@@ -95,25 +95,6 @@ final class ObjectConstructorTest extends MapperTestCase
         $mapper->input([]);
     }
 
-    /**
-     * @throws \Throwable
-     */
-    public function testPrivateConstructor(): void
-    {
-        $mapper = new ObjectConstructor(new Constant(ClassWithPrivateConstructor::class));
-
-        $this->expectExceptionObject(
-            new \LogicException(
-                \sprintf(
-                    '%s::__construct is not public. Try another factory.',
-                    ClassWithPrivateConstructor::class
-                )
-            )
-        );
-
-        $mapper->input([]);
-    }
-
     public function testInvalidInputType(): void
     {
         $mapper = new ObjectConstructor(new Constant(input: \stdClass::class));
@@ -144,6 +125,44 @@ final class ObjectConstructorTest extends MapperTestCase
         );
 
         $mapper->output(['foo']);
+    }
+
+    /**
+     * @throws \Throwable
+     */
+    public function testPrivateConstructor(): void
+    {
+        $mapper = new ObjectConstructor(new Constant(ClassWithPrivateConstructor::class));
+
+        $this->expectExceptionObject(
+            new \LogicException(
+                \sprintf(
+                    '%s::__construct is not public. Try another factory.',
+                    ClassWithPrivateConstructor::class
+                )
+            )
+        );
+
+        $mapper->input([]);
+    }
+
+    /**
+     * @throws \Throwable
+     */
+    public function testValueForArgumentNotExists(): void
+    {
+        $mapper = new ObjectConstructor(new Constant(ClassWithConstructor::class));
+
+        $this->expectExceptionObject(
+            new \DomainException(
+                \sprintf(
+                    'Cannot call %s::__construct(). There is no "bar" field in the input data.',
+                    ClassWithConstructor::class
+                )
+            )
+        );
+
+        $mapper->input(['foo' => 'foo value']);
     }
 
     protected function createMapper(mixed ...$arguments): Mapper

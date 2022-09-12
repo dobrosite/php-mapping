@@ -51,6 +51,8 @@ abstract class ObjectMapper implements Mapper
      * @param array<string, mixed>   $properties
      *
      * @return array<string, mixed>
+     *
+     * @throws \DomainException
      */
     protected function extractArgumentsForParameters(
         array $parameters,
@@ -60,6 +62,11 @@ abstract class ObjectMapper implements Mapper
 
         foreach ($parameters as $parameter) {
             $name = $parameter->getName();
+            if (!\array_key_exists($name, $properties)) {
+                throw new \DomainException(
+                    \sprintf('There is no "%s" field in the input data.', $name)
+                );
+            }
             $arguments[$name] = $properties[$name];
             unset($properties[$name]);
         }

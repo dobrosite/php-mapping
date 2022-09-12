@@ -28,10 +28,22 @@ class ObjectConstructor extends ObjectMapper
                     )
                 );
             }
-            $arguments = $this->extractArgumentsForParameters(
-                $constructor->getParameters(),
-                $properties
-            );
+            try {
+                $arguments = $this->extractArgumentsForParameters(
+                    $constructor->getParameters(),
+                    $properties
+                );
+            } catch (\DomainException $exception) {
+                throw new \DomainException(
+                    \sprintf(
+                        'Cannot call %s::__construct(). %s',
+                        $className,
+                        $exception->getMessage()
+                    ),
+                    0,
+                    $exception
+                );
+            }
         }
 
         return $class->newInstance(...$arguments);
