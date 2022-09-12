@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace DobroSite\Mapping;
 
+use DobroSite\Mapping\Exception\InsufficientInput;
+use DobroSite\Mapping\Exception\InvalidMapping;
+use DobroSite\Mapping\Exception\InvalidSourceType;
+
 abstract class ObjectMapper implements Mapper
 {
     public function input(mixed $source): object
@@ -19,7 +23,7 @@ abstract class ObjectMapper implements Mapper
     /**
      * @return array<string, mixed>
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidSourceType
      */
     public function output(mixed $source): array
     {
@@ -39,10 +43,8 @@ abstract class ObjectMapper implements Mapper
     /**
      * @param array<string, mixed> $properties
      *
-     * @throws \DomainException
-     * @throws \InvalidArgumentException
-     * @throws \LogicException
-     * @throws \UnexpectedValueException
+     * @throws InvalidSourceType
+     * @throws InsufficientInput
      */
     abstract protected function createInstance(array &$properties): object;
 
@@ -52,7 +54,7 @@ abstract class ObjectMapper implements Mapper
      *
      * @return array<string, mixed>
      *
-     * @throws \DomainException
+     * @throws InsufficientInput
      */
     protected function extractArgumentsForParameters(
         array $parameters,
@@ -63,7 +65,7 @@ abstract class ObjectMapper implements Mapper
         foreach ($parameters as $parameter) {
             $name = $parameter->getName();
             if (!\array_key_exists($name, $properties)) {
-                throw new \DomainException(
+                throw new InsufficientInput(
                     \sprintf('There is no "%s" field in the input data.', $name)
                 );
             }
@@ -75,14 +77,14 @@ abstract class ObjectMapper implements Mapper
     }
 
     /**
-     * @throws \UnexpectedValueException
+     * @throws InvalidMapping
      */
     protected function getClassReflection(string $className): \ReflectionClass
     {
         try {
             $class = new \ReflectionClass($className);
         } catch (\ReflectionException $exception) {
-            throw new \UnexpectedValueException(
+            throw new InvalidMapping(
                 \sprintf(
                     '%s cannot create object. %s',
                     $this::class,

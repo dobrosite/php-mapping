@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace Tests\Unit;
 
 use DobroSite\Mapping\ArrayValues;
+use DobroSite\Mapping\AsIs;
 use DobroSite\Mapping\Callback;
+use DobroSite\Mapping\Exception\InsufficientInput;
+use DobroSite\Mapping\Exception\InvalidSourceType;
 use DobroSite\Mapping\Mapper;
 
 /**
@@ -41,12 +44,26 @@ final class ArrayValuesTest extends MapperTestCase
         ];
     }
 
+    /**
+     * @throws \Throwable
+     */
+    public function testInputKeyNotExists(): void
+    {
+        $mapper = new ArrayValues(['foo' => new AsIs()]);
+
+        $this->expectExceptionObject(
+            new InsufficientInput('There is no "foo" field in the input data.')
+        );
+
+        $mapper->input([]);
+    }
+
     public function testInvalidInputType(): void
     {
         $mapper = new ArrayValues([]);
 
         $this->expectExceptionObject(
-            new \InvalidArgumentException(
+            new InvalidSourceType(
                 \sprintf(
                     "Argument for the %s::input should be one of [array], but 'foo' given.",
                     ArrayValues::class
@@ -62,7 +79,7 @@ final class ArrayValuesTest extends MapperTestCase
         $mapper = new ArrayValues([]);
 
         $this->expectExceptionObject(
-            new \InvalidArgumentException(
+            new InvalidSourceType(
                 \sprintf(
                     "Argument for the %s::output should be one of [array], but 'foo' given.",
                     ArrayValues::class

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
+use DobroSite\Mapping\Exception\InvalidSourceType;
 use DobroSite\Mapping\FloatType;
 use DobroSite\Mapping\Mapper;
 
@@ -82,7 +83,7 @@ final class FloatTypeTest extends MapperTestCase
         $type = new FloatType();
 
         $this->expectExceptionObject(
-            new \InvalidArgumentException(
+            new InvalidSourceType(
                 \sprintf(
                     'Argument for the %s::input should be one of [float, integer, string], but NULL given.',
                     FloatType::class
@@ -98,7 +99,7 @@ final class FloatTypeTest extends MapperTestCase
         $type = new FloatType();
 
         $this->expectExceptionObject(
-            new \InvalidArgumentException(
+            new InvalidSourceType(
                 \sprintf(
                     "Argument for the %s::output should be one of [float, integer], but '123' given.",
                     FloatType::class

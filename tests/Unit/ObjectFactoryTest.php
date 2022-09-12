@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
+use DobroSite\Mapping\Exception\InvalidSourceType;
 use DobroSite\Mapping\Mapper;
 use DobroSite\Mapping\ObjectFactory;
 use Tests\Fixture\ClassWithConstructor;
@@ -98,7 +99,7 @@ final class ObjectFactoryTest extends MapperTestCase
         $mapper = new ObjectFactory(fn() => null);
 
         $this->expectExceptionObject(
-            new \InvalidArgumentException(
+            new InvalidSourceType(
                 \sprintf(
                     "Argument for the %s::input should be one of [array], but 'foo' given.",
                     ObjectFactory::class
@@ -114,7 +115,7 @@ final class ObjectFactoryTest extends MapperTestCase
         $mapper = new ObjectFactory(fn() => null);
 
         $this->expectExceptionObject(
-            new \InvalidArgumentException(
+            new InvalidSourceType(
                 \sprintf(
                     "Argument for the %s::input should be one of [object], but array (\n  0 => 'foo',\n) given.",
                     ObjectFactory::class

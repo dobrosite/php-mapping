@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace DobroSite\Mapping;
 
+use DobroSite\Mapping\Exception\InvalidSourceType;
+use DobroSite\Mapping\Exception\InvalidSourceValue;
+
 class EnumType implements Mapper
 {
     /**
      * @param class-string $enumType
      *
-     * @throws \InvalidArgumentException Если $enumType не является именем перечисляемого типа.
+     * @throws InvalidSourceType Если $enumType не является именем перечисляемого типа.
      */
     public function __construct(
         private readonly string $enumType
@@ -17,7 +20,7 @@ class EnumType implements Mapper
         try {
             new \ReflectionEnum($this->enumType);
         } catch (\ReflectionException) {
-            throw new \InvalidArgumentException(
+            throw new InvalidSourceType(
                 \sprintf('%s is not an enum type.', $this->enumType)
             );
         }
@@ -33,7 +36,7 @@ class EnumType implements Mapper
     public function output(mixed $source): mixed
     {
         if (!$source instanceof \BackedEnum) {
-            throw new \InvalidArgumentException(
+            throw new InvalidSourceType(
                 \sprintf(
                     'Argument %s for the %s::output is not a valid enum case.',
                     formatValue($source),
@@ -43,7 +46,7 @@ class EnumType implements Mapper
         }
 
         if (!$source instanceof $this->enumType) {
-            throw new \DomainException(
+            throw new InvalidSourceValue(
                 \sprintf(
                     'Value %s is not a case of %s.',
                     \var_export($source, true),

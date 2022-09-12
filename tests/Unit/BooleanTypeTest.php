@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Tests\Unit;
 
 use DobroSite\Mapping\BooleanType;
+use DobroSite\Mapping\Exception\InvalidSourceType;
+use DobroSite\Mapping\Exception\InvalidSourceValue;
 use DobroSite\Mapping\Mapper;
 
 /**
@@ -102,7 +104,7 @@ final class BooleanTypeTest extends MapperTestCase
         $mapper = new BooleanType();
 
         $this->expectExceptionObject(
-            new \InvalidArgumentException(
+            new InvalidSourceType(
                 \sprintf(
                     "Value for the %s::input should be a scalar, but array (\n) given.",
                     BooleanType::class
@@ -121,7 +123,7 @@ final class BooleanTypeTest extends MapperTestCase
         $mapper = new BooleanType();
 
         $this->expectExceptionObject(
-            new \DomainException(
+            new InvalidSourceValue(
                 \sprintf(
                     'Value "Foo" is not allowed for the %s::input. Allowed values are "true" and "false".',
                     BooleanType::class
@@ -140,9 +142,9 @@ final class BooleanTypeTest extends MapperTestCase
         $mapper = new BooleanType();
 
         $this->expectExceptionObject(
-            new \InvalidArgumentException(
+            new InvalidSourceType(
                 \sprintf(
-                    "Value for the %s::output should be a boolean, but 'true' given.",
+                    "Argument for the %s::output should be one of [boolean], but 'true' given.",
                     BooleanType::class
                 )
             )

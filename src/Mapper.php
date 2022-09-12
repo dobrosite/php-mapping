@@ -4,21 +4,25 @@ declare(strict_types=1);
 
 namespace DobroSite\Mapping;
 
+use DobroSite\Mapping\Exception\InsufficientInput;
+use DobroSite\Mapping\Exception\InvalidMapping;
+use DobroSite\Mapping\Exception\InvalidSourceType;
+use DobroSite\Mapping\Exception\InvalidSourceValue;
+
 interface Mapper
 {
     /**
-     * @throws \DomainException
-     * @throws \InvalidArgumentException
-     * @throws \LogicException
-     * @throws \UnexpectedValueException
+     * @throws InsufficientInput
+     * @throws InvalidMapping
+     * @throws InvalidSourceType
+     * @throws InvalidSourceValue
      */
     public function input(mixed $source): mixed;
 
     /**
-     * @throws \DomainException
-     * @throws \InvalidArgumentException
-     * @throws \LogicException
-     * @throws \UnexpectedValueException
+     * @throws InvalidMapping
+     * @throws InvalidSourceType
+     * @throws InvalidSourceValue
      */
     public function output(mixed $source): mixed;
 }

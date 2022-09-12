@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit;
 
 use DobroSite\Mapping\ArrayDefaults;
+use DobroSite\Mapping\Exception\InvalidSourceType;
 use DobroSite\Mapping\Mapper;
 
 /**
@@ -43,7 +44,7 @@ final class ArrayDefaultsTest extends MapperTestCase
         $mapper = new ArrayDefaults([]);
 
         $this->expectExceptionObject(
-            new \InvalidArgumentException(
+            new InvalidSourceType(
                 \sprintf(
                     "Argument for the %s::input should be one of [array], but 'foo' given.",
                     ArrayDefaults::class

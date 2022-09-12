@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Tests\Unit;
 
 use DobroSite\Mapping\EnumType;
+use DobroSite\Mapping\Exception\InvalidSourceType;
+use DobroSite\Mapping\Exception\InvalidSourceValue;
 use DobroSite\Mapping\Mapper;
 use Tests\Fixture\TestEnum;
 use Tests\Fixture\TestEnum2;
@@ -33,7 +35,7 @@ final class EnumTypeTest extends MapperTestCase
     public function testInvalidInputType(): void
     {
         $this->expectExceptionObject(
-            new \InvalidArgumentException(
+            new InvalidSourceType(
                 \sprintf(
                     "Argument for the %s::input should be one of [string], but array (\n) given.",
                     EnumType::class
@@ -48,7 +50,7 @@ final class EnumTypeTest extends MapperTestCase
     public function testInvalidOutputType(): void
     {
         $this->expectExceptionObject(
-            new \InvalidArgumentException(
+            new InvalidSourceType(
                 \sprintf(
                     'Argument \'foo\' for the %s::output is not a valid enum case.',
                     EnumType::class
@@ -66,7 +68,7 @@ final class EnumTypeTest extends MapperTestCase
     public function testInvalidOutputValue(): void
     {
         $this->expectExceptionObject(
-            new \DomainException(
+            new InvalidSourceValue(
                 \sprintf('Value %s::A is not a case of %s.', TestEnum2::class, TestEnum::class)
             )
         );
@@ -81,7 +83,7 @@ final class EnumTypeTest extends MapperTestCase
     public function testNotEnum(): void
     {
         $this->expectExceptionObject(
-            new \InvalidArgumentException('stdClass is not an enum type.')
+            new InvalidSourceType('stdClass is not an enum type.')
         );
 
         new EnumType(\stdClass::class);

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace DobroSite\Mapping;
 
+use DobroSite\Mapping\Exception\InvalidSourceType;
+
 class ArrayDefaults implements Mapper
 {
     /**
@@ -17,7 +19,7 @@ class ArrayDefaults implements Mapper
     /**
      * @return array<string, mixed>
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidSourceType
      */
     public function input(mixed $source): array
     {
@@ -30,7 +32,7 @@ class ArrayDefaults implements Mapper
     /**
      * @return array<string, mixed>
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidSourceType
      */
     public function output(mixed $source): array
     {

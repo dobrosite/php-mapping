@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace DobroSite\Mapping;
 
+use DobroSite\Mapping\Exception\InvalidSourceType;
+
 /**
  * @param string[] $expected
  *
- * @throws \InvalidArgumentException
+ * @throws InvalidSourceType
  */
 function checkSourceType(Mapper $mapper, string $method, array $expected, mixed $given): void
 {
@@ -18,7 +20,7 @@ function checkSourceType(Mapper $mapper, string $method, array $expected, mixed 
     };
 
     if (!\in_array($type, $expected, true)) {
-        throw new \InvalidArgumentException(
+        throw new InvalidSourceType(
             \sprintf(
                 'Argument for the %s::%s should be one of [%s], but %s given.',
                 $mapper::class,

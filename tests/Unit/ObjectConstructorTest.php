@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace Tests\Unit;
 
 use DobroSite\Mapping\Constant;
+use DobroSite\Mapping\Exception\InsufficientInput;
+use DobroSite\Mapping\Exception\InvalidMapping;
+use DobroSite\Mapping\Exception\InvalidSourceType;
+use DobroSite\Mapping\Exception\InvalidSourceValue;
 use DobroSite\Mapping\Mapper;
 use DobroSite\Mapping\ObjectConstructor;
 use Tests\Fixture\ClassWithConstructor;
@@ -65,7 +69,7 @@ final class ObjectConstructorTest extends MapperTestCase
         $mapper = new ObjectConstructor(new Constant(null));
 
         $this->expectExceptionObject(
-            new \UnexpectedValueException(
+            new InvalidMapping(
                 \sprintf(
                     '%s cannot create object: class name should be a string, but NULL returned by class name mapper.',
                     ObjectConstructor::class
@@ -84,7 +88,7 @@ final class ObjectConstructorTest extends MapperTestCase
         $mapper = new ObjectConstructor(new Constant('NotExistedClass'));
 
         $this->expectExceptionObject(
-            new \UnexpectedValueException(
+            new InvalidMapping(
                 \sprintf(
                     '%s cannot create object. Class "NotExistedClass" does not exist',
                     ObjectConstructor::class
@@ -100,7 +104,7 @@ final class ObjectConstructorTest extends MapperTestCase
         $mapper = new ObjectConstructor(new Constant(input: \stdClass::class));
 
         $this->expectExceptionObject(
-            new \InvalidArgumentException(
+            new InvalidSourceType(
                 \sprintf(
                     "Argument for the %s::input should be one of [array], but 'foo' given.",
                     ObjectConstructor::class
@@ -116,7 +120,7 @@ final class ObjectConstructorTest extends MapperTestCase
         $mapper = new ObjectConstructor(new Constant(input: \stdClass::class));
 
         $this->expectExceptionObject(
-            new \InvalidArgumentException(
+            new InvalidSourceType(
                 \sprintf(
                     "Argument for the %s::input should be one of [object], but array (\n  0 => 'foo',\n) given.",
                     ObjectConstructor::class
@@ -135,7 +139,7 @@ final class ObjectConstructorTest extends MapperTestCase
         $mapper = new ObjectConstructor(new Constant(ClassWithPrivateConstructor::class));
 
         $this->expectExceptionObject(
-            new \LogicException(
+            new InvalidMapping(
                 \sprintf(
                     '%s::__construct is not public. Try another factory.',
                     ClassWithPrivateConstructor::class
@@ -154,12 +158,7 @@ final class ObjectConstructorTest extends MapperTestCase
         $mapper = new ObjectConstructor(new Constant(ClassWithConstructor::class));
 
         $this->expectExceptionObject(
-            new \DomainException(
-                \sprintf(
-                    'Cannot call %s::__construct(). There is no "bar" field in the input data.',
-                    ClassWithConstructor::class
-                )
-            )
+            new InsufficientInput('There is no "bar" field in the input data.')
         );
 
         $mapper->input(['foo' => 'foo value']);

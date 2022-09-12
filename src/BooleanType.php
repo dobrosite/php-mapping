@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace DobroSite\Mapping;
 
+use DobroSite\Mapping\Exception\InvalidSourceType;
+use DobroSite\Mapping\Exception\InvalidSourceValue;
+
 class BooleanType implements Mapper
 {
     private readonly string $false;
@@ -21,7 +24,7 @@ class BooleanType implements Mapper
     public function input(mixed $source): bool
     {
         if (!\is_scalar($source)) {
-            throw new \InvalidArgumentException(
+            throw new InvalidSourceType(
                 \sprintf(
                     'Value for the %s should be a scalar, but %s given.',
                     __METHOD__,
@@ -33,7 +36,7 @@ class BooleanType implements Mapper
         return match (\mb_strtolower((string) $source, 'utf8')) {
             $this->true => true,
             $this->false => false,
-            default => throw new \DomainException(
+            default => throw new InvalidSourceValue(
                 \sprintf(
                     'Value "%s" is not allowed for the %s. Allowed values are "%s" and "%s".',
                     $source,
@@ -47,15 +50,7 @@ class BooleanType implements Mapper
 
     public function output(mixed $source): string
     {
-        if (!\is_bool($source)) {
-            throw new \InvalidArgumentException(
-                \sprintf(
-                    'Value for the %s should be a boolean, but %s given.',
-                    __METHOD__,
-                    formatValue($source)
-                )
-            );
-        }
+        checkSourceType($this, 'output', ['boolean'], $source);
 
         return match ((bool) $source) {
             true => $this->true,

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit;
 
 use DobroSite\Mapping\ArrayKeysMap;
+use DobroSite\Mapping\Exception\InvalidSourceType;
 use DobroSite\Mapping\Mapper;
 
 /**
@@ -57,7 +58,7 @@ final class ArrayKeysMapTest extends MapperTestCase
         $mapper = new ArrayKeysMap([]);
 
         $this->expectExceptionObject(
-            new \InvalidArgumentException(
+            new InvalidSourceType(
                 \sprintf(
                     "Argument for the %s::input should be one of [array], but 'foo' given.",
                     ArrayKeysMap::class
@@ -73,7 +74,7 @@ final class ArrayKeysMapTest extends MapperTestCase
         $mapper = new ArrayKeysMap([]);
 
         $this->expectExceptionObject(
-            new \InvalidArgumentException(
+            new InvalidSourceType(
                 \sprintf(
                     "Argument for the %s::output should be one of [array], but 'foo' given.",
                     ArrayKeysMap::class

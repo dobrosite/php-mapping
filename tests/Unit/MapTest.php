@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
+use DobroSite\Mapping\Exception\InsufficientInput;
+use DobroSite\Mapping\Exception\InvalidSourceType;
+use DobroSite\Mapping\Exception\InvalidSourceValue;
 use DobroSite\Mapping\Map;
 use DobroSite\Mapping\Mapper;
 
@@ -52,7 +55,7 @@ final class MapTest extends MapperTestCase
         $type = new Map([]);
 
         $this->expectExceptionObject(
-            new \InvalidArgumentException(
+            new InvalidSourceType(
                 \sprintf(
                     'Argument for the %s::input should be one of [integer, string], but NULL given.',
                     Map::class
@@ -76,7 +79,7 @@ final class MapTest extends MapperTestCase
         $type = new Map(['a' => true, 'b' => false]);
 
         $this->expectExceptionObject(
-            new \DomainException('Key "foo" is not in the map. Available values are: a, b.')
+            new InsufficientInput('Key "foo" is not in the map. Available values are: a, b.')
         );
 
         $type->input('foo');
@@ -91,7 +94,7 @@ final class MapTest extends MapperTestCase
         $type = new Map(['a' => true, 'b' => false]);
 
         $this->expectExceptionObject(
-            new \DomainException('Value 1 is not in the map. Available values are: true, false.')
+            new InvalidSourceValue('Value 1 is not in the map. Available values are: true, false.')
         );
 
         $type->output(1);

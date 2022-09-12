@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 namespace DobroSite\Mapping;
 
+use DobroSite\Mapping\Exception\InsufficientInput;
+use DobroSite\Mapping\Exception\InvalidMapping;
+use DobroSite\Mapping\Exception\InvalidSourceType;
+use DobroSite\Mapping\Exception\InvalidSourceValue;
+
 class ObjectConstructor extends ObjectMapper
 {
     public function __construct(
@@ -11,6 +16,12 @@ class ObjectConstructor extends ObjectMapper
     ) {
     }
 
+    /**
+     * @throws InsufficientInput
+     * @throws InvalidSourceType
+     * @throws InvalidMapping
+     * @throws InvalidSourceValue
+     */
     protected function createInstance(array &$properties): object
     {
         $className = $this->detectClassName($properties);
@@ -20,7 +31,7 @@ class ObjectConstructor extends ObjectMapper
         $constructor = $class->getConstructor();
         if ($constructor instanceof \ReflectionMethod) {
             if (!$constructor->isPublic()) {
-                throw new \LogicException(
+                throw new InvalidMapping(
                     \sprintf(
                         '%s::%s is not public. Try another factory.',
                         $class->getName(),
@@ -34,7 +45,7 @@ class ObjectConstructor extends ObjectMapper
                     $properties
                 );
             } catch (\DomainException $exception) {
-                throw new \DomainException(
+                throw new InsufficientInput(
                     \sprintf(
                         'Cannot call %s::__construct(). %s',
                         $className,
@@ -52,16 +63,16 @@ class ObjectConstructor extends ObjectMapper
     /**
      * @param array<string, mixed> $properties
      *
-     * @throws \DomainException
-     * @throws \InvalidArgumentException
-     * @throws \LogicException
-     * @throws \UnexpectedValueException
+     * @throws InsufficientInput
+     * @throws InvalidMapping
+     * @throws InvalidSourceType
+     * @throws InvalidSourceValue
      */
     private function detectClassName(array $properties): string
     {
         $className = $this->class->input($properties);
         if (!\is_string($className)) {
-            throw new \UnexpectedValueException(
+            throw new InvalidMapping(
                 \sprintf(
                     '%s cannot create object: class name should be a string, but %s returned by class name mapper.',
                     $this::class,

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace DobroSite\Mapping;
 
+use DobroSite\Mapping\Exception\InsufficientInput;
+use DobroSite\Mapping\Exception\InvalidSourceValue;
+
 class Map implements Mapper
 {
     /**
@@ -20,7 +23,7 @@ class Map implements Mapper
         \assert(\is_int($source) || \is_string($source));
 
         if (!\array_key_exists($source, $this->map)) {
-            throw new \DomainException(
+            throw new InsufficientInput(
                 \sprintf(
                     'Key "%s" is not in the map. Available values are: %s.',
                     $source,
@@ -39,7 +42,7 @@ class Map implements Mapper
             return $key;
         }
 
-        throw new \DomainException(
+        throw new InvalidSourceValue(
             \sprintf(
                 'Value %s is not in the map. Available values are: %s.',
                 \var_export($source, true),

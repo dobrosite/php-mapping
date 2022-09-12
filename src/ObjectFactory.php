@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace DobroSite\Mapping;
 
+use DobroSite\Mapping\Exception\InsufficientInput;
+use DobroSite\Mapping\Exception\InvalidMapping;
+
 class ObjectFactory extends ObjectMapper
 {
     /**
@@ -16,6 +19,10 @@ class ObjectFactory extends ObjectMapper
         $this->factory = $factory;
     }
 
+    /**
+     * @throws InvalidMapping
+     * @throws InsufficientInput
+     */
     protected function createInstance(array &$properties): object
     {
         if (\is_array($this->factory)) {
@@ -23,7 +30,7 @@ class ObjectFactory extends ObjectMapper
         } elseif (\is_string($this->factory) || $this->factory instanceof \Closure) {
             $parameters = $this->getParametersForFunction($this->factory);
         } else {
-            throw new \LogicException(
+            throw new InvalidMapping(
                 \sprintf('Unsupported factory type: %s.', \gettype($this->factory))
             );
         }
@@ -41,7 +48,7 @@ class ObjectFactory extends ObjectMapper
      *
      * @return array<\ReflectionParameter>
      *
-     * @throws \LogicException
+     * @throws InvalidMapping
      */
     private function getParametersForArrayFactory(array $factory): array
     {
@@ -52,14 +59,14 @@ class ObjectFactory extends ObjectMapper
             try {
                 $factoryReflection = new \ReflectionClass($factoryClassOrObject);
             } catch (\ReflectionException $exception) {
-                throw new \LogicException(
+                throw new InvalidMapping(
                     \sprintf('Factory class "%s" not found.', $factoryClassOrObject),
                     0,
                     $exception
                 );
             }
         } else {
-            throw new \LogicException(
+            throw new InvalidMapping(
                 \sprintf(
                     'Element 0 of callable array should be an object or a string, %s given.',
                     formatValue($factoryClassOrObject)
@@ -71,7 +78,7 @@ class ObjectFactory extends ObjectMapper
             \assert(\is_string($factoryMethodName));
             $factoryMethod = $factoryReflection->getMethod($factoryMethodName);
         } catch (\ReflectionException $exception) {
-            throw new \LogicException(
+            throw new InvalidMapping(
                 \sprintf(
                     'Factory method "%s::%s" not found.',
                     $factoryReflection->getName(),
@@ -88,14 +95,14 @@ class ObjectFactory extends ObjectMapper
     /**
      * @return array<\ReflectionParameter>
      *
-     * @throws \LogicException
+     * @throws InvalidMapping
      */
     private function getParametersForFunction(\Closure | string $factory): array
     {
         try {
             return (new \ReflectionFunction($factory))->getParameters();
         } catch (\ReflectionException $exception) {
-            throw new \LogicException(
+            throw new InvalidMapping(
                 \sprintf(
                     'Factory function "%s" not found.',
                     \is_string($factory) ? $factory : \gettype($factory)
