@@ -4,112 +4,113 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use DobroSite\Mapping\Exception\DataError;
 use DobroSite\Mapping\FloatType;
-use DobroSite\Mapping\Type;
+use DobroSite\Mapping\Mapper;
 
 /**
  * @covers \DobroSite\Mapping\FloatType
  */
-final class FloatTypeTest extends TypeTestCase
+final class FloatTypeTest extends MapperTestCase
 {
-    public static function toDataValueDataProvider(): iterable
-    {
-        return [
-            'Без дробной части (en)' => [
-                'givenValue' => 1_234_567.00,
-                'expectedValue' => '1,234,567',
-                'arguments' => [new \NumberFormatter('en', \NumberFormatter::DEFAULT_STYLE)],
-            ],
-            'С дробной частью (en)' => [
-                'givenValue' => 1_234_567.89,
-                'expectedValue' => '1,234,567.89',
-                'arguments' => [new \NumberFormatter('en', \NumberFormatter::DEFAULT_STYLE)],
-            ],
-            'Без дробной части (ru_RU)' => [
-                'givenValue' => 1_234_567.00,
-                'expectedValue' => '1 234 567',
-                'arguments' => [new \NumberFormatter('ru_RU', \NumberFormatter::DEFAULT_STYLE)],
-            ],
-            'С дробной частью (ru_RU)' => [
-                'givenValue' => 1_234_567.89,
-                'expectedValue' => '1 234 567,89',
-                'arguments' => [new \NumberFormatter('ru_RU', \NumberFormatter::DEFAULT_STYLE)],
-            ],
-        ];
-    }
-
-    public static function toPhpValueDataProvider(): iterable
+    public static function inputDataProvider(): iterable
     {
         return [
             'Целое число' => [
-                'givenValue' => 1_234_567,
-                'expectedValue' => 1_234_567,
+                'given' => 1_234_567,
+                'expected' => 1_234_567,
             ],
             'Вещественное число' => [
-                'givenValue' => 1_234_567.89,
-                'expectedValue' => 1_234_567.89,
+                'given' => 1_234_567.89,
+                'expected' => 1_234_567.89,
             ],
             'Целое число как строка (en)' => [
-                'givenValue' => '1234567',
-                'expectedValue' => 1_234_567,
+                'given' => '1234567',
+                'expected' => 1_234_567,
                 'arguments' => [new \NumberFormatter('en', \NumberFormatter::DEFAULT_STYLE)],
             ],
             'Вещественное число как строка (en)' => [
-                'givenValue' => '1234567.89',
-                'expectedValue' => 1_234_567.89,
+                'given' => '1234567.89',
+                'expected' => 1_234_567.89,
                 'arguments' => [new \NumberFormatter('en', \NumberFormatter::DEFAULT_STYLE)],
             ],
             'Целое число как строка (ru_RU)' => [
-                'givenValue' => '1234567',
-                'expectedValue' => 1_234_567,
+                'given' => '1234567',
+                'expected' => 1_234_567,
                 'arguments' => [new \NumberFormatter('ru_RU', \NumberFormatter::DEFAULT_STYLE)],
             ],
             'Целое число как строка с пробелами (ru_RU)' => [
-                'givenValue' => '1 234 567',
-                'expectedValue' => 1_234_567,
+                'given' => '1 234 567',
+                'expected' => 1_234_567,
                 'arguments' => [new \NumberFormatter('ru_RU', \NumberFormatter::DEFAULT_STYLE)],
             ],
             'Вещественное число как строка (ru_RU)' => [
-                'givenValue' => '1234567,89',
-                'expectedValue' => 1_234_567.89,
+                'given' => '1234567,89',
+                'expected' => 1_234_567.89,
                 'arguments' => [new \NumberFormatter('ru_RU', \NumberFormatter::DEFAULT_STYLE)],
             ],
         ];
     }
 
-    /**
-     * @throws \Throwable
-     */
-    public function testInvalidDataValueType(): void
+    public static function outputDataProvider(): iterable
+    {
+        return [
+            'Без дробной части (en)' => [
+                'given' => 1_234_567.00,
+                'expected' => '1,234,567',
+                'arguments' => [new \NumberFormatter('en', \NumberFormatter::DEFAULT_STYLE)],
+            ],
+            'С дробной частью (en)' => [
+                'given' => 1_234_567.89,
+                'expected' => '1,234,567.89',
+                'arguments' => [new \NumberFormatter('en', \NumberFormatter::DEFAULT_STYLE)],
+            ],
+            'Без дробной части (ru_RU)' => [
+                'given' => 1_234_567.00,
+                'expected' => '1 234 567',
+                'arguments' => [new \NumberFormatter('ru_RU', \NumberFormatter::DEFAULT_STYLE)],
+            ],
+            'С дробной частью (ru_RU)' => [
+                'given' => 1_234_567.89,
+                'expected' => '1 234 567,89',
+                'arguments' => [new \NumberFormatter('ru_RU', \NumberFormatter::DEFAULT_STYLE)],
+            ],
+        ];
+    }
+
+    public function testInvalidInputType(): void
     {
         $type = new FloatType();
 
         $this->expectExceptionObject(
-            new DataError(
-                'Value for FloatType should be either integer, float or string, but NULL given.'
+            new \InvalidArgumentException(
+                \sprintf(
+                    'Argument for the %s::input should be one of [float, integer, string], but NULL given.',
+                    FloatType::class
+                )
             )
         );
 
-        $type->toPhpValue(null);
+        $type->input(null);
     }
 
-    /**
-     * @throws \Throwable
-     */
-    public function testInvalidPhpValueType(): void
+    public function testInvalidOutputType(): void
     {
         $type = new FloatType();
 
         $this->expectExceptionObject(
-            new DataError('PHP value for FloatType should float, but string given.')
+            new \InvalidArgumentException(
+                \sprintf(
+                    "Argument for the %s::output should be one of [float, integer], but '123' given.",
+                    FloatType::class
+                )
+            )
         );
 
-        $type->toDataValue('123.45');
+        $type->output('123');
     }
 
-    protected function createType(mixed ...$parameters): Type
+    protected function createMapper(mixed ...$arguments): Mapper
     {
-        return new FloatType(...$parameters);
+        return new FloatType(...$arguments);
     }
 }

@@ -1,274 +1,287 @@
 # Отображение данных на структуры PHP
 
-Набор компонентов для отображения простых и структурированных данных на структуры PHP.
+Библиотека компонентов для отображения структурированных данных на структуры PHP и обратно.
 
-## Типы данных
+Основная идея библиотеки — предоставить «кирпичики» из которых можно построить свои правила
+отображения данных для любой ситуации.
 
-Классы типов данных предназначены для преобразования данных из внешнего представления во внутреннее
-и наоборот. Они могут быть использованы как совместно с другими компонентами, так и сами по себе.
+## Основы
 
-У каждого типа есть два метода преобразования данных:
+- **Входные данные** (**input**) — структурированные данные, которые требуется отобразить на
+  структуры PHP.
+- **Выходные данные** (**output**) — структурированные данные, получаемые из структур PHP.
+- **Массив** (**array**) — этим словом в библиотеке обозначаются **только ассоциативные массивы**.
+- **Коллекция** (**collection**) — индексированный (неассоциативный) массив однотипных значений.
 
-- `toPhpValue` — преобразует внешнее представление в значение PHP;
-- `toDataValue` — преобразует значение PHP во внешнее представление.
+## Mapper
+
+Сердцем библиотеки является интерфейс [Mapper](src/Mapper.php), содержащий всего два метода:
+
+```injectablephp
+public function input(mixed $source): mixed;
+```
+
+Отображает входные данные `$source` на структуру PHP и возвращает её. 
+
+```injectablephp
+public function output(mixed $source): mixed;
+```
+
+Выполняет обратное действие.
+
+## Справочник классов
+
+### ArrayDefaults
+
+Позволяет задать значения по умолчанию для ключей, отсутствующих во входном массиве.
+
+```injectablephp
+use DobroSite\Mapping;
+
+$mapper = new Mapping\ArrayDefaults([
+  'bar' => 'bar value',
+]);
+
+$mapper->input(['foo' => 'foo value']);
+// ['foo' => 'foo value', 'bar' => 'bar value']
+```
+
+### ArrayKeys
+
+Применяет указанное преобразование последовательно к каждому ключу ассоциативного массива. 
+
+```injectablephp
+use DobroSite\Mapping;
+
+$mapper = new Mapping\ArrayKeys(
+  new Mapping\Callback(
+    input: strtolower(...),
+    output: strtoupper(...),
+  ),
+);
+
+$mapper->input(['FOO' => 'foo value', 'BAR' => 'bar value']);
+// ['foo' => 'foo value', 'bar' => 'bar value']
+
+$mapper->output(['foo' => 'foo value', 'bar' => 'bar value']);
+// ['FOO' => 'foo value', 'BAR' => 'bar value']
+```
+
+### ArrayKeysMap
+
+Меняет имена ключей массива на основе карты соответствия.
+
+```injectablephp
+use DobroSite\Mapping;
+
+$mapper = new Mapping\ArrayKeysMap([
+  'FOO' => 'foo',
+  'BAR' => 'bar',
+]);
+
+$mapper->input(['FOO' => 'foo value', 'BAR' => 'bar value']);
+// ['foo' => 'foo value', 'bar' => 'bar value']
+
+$mapper->output(['foo' => 'foo value', 'bar' => 'bar value']);
+// ['FOO' => 'foo value', 'BAR' => 'bar value']
+```
+
+### ArrayValues
+
+Применяет преобразования к указанным значениям ассоциативного массива.
+
+```injectablephp
+use DobroSite\Mapping;
+
+$mapper = new Mapping\ArrayValues([
+  'active' => new Mapping\BooleanType('yes', 'no'),
+]);
+
+$mapper->input(['active' => 'yes']); // ['active' => true]
+$mapper->output(['active' => true]); // ['active' => 'yes']
+```
+
+### AsIs
+
+Оставляет значения как они есть.
+
+```injectablephp
+use DobroSite\Mapping;
+
+$mapper = new Mapping\AsIs();
+$mapper->input('foo'); // 'foo'
+$mapper->output('foo'); // 'foo'
+```
 
 ### BooleanType
 
 Преобразовывает значение в булев тип.
 
-```php
+```injectablephp
 use DobroSite\Mapping;
 
-$type = new Mapping\BooleanType();
-$type->toPhpValue('true'); // true
+$mapper = new Mapping\BooleanType();
+$mapper->input('true'); // true
+$mapper->output(true); // 'true'
 
-$type = new Mapping\FloatType(true: 'да', false: 'нет');
-$type->toPhpValue('Нет'); // false
+$mapper = new Mapping\BooleanType(true: 'да', false: 'нет');
+$mapper->input('Нет'); // false
+$mapper->output(false); // 'нет'
 ```
 
-### ClassType
+### Callback
 
-Используется для отображения данных на объект.
+Позволяет использовать для преобразования функции обратного вызова.
 
-Конструктору требуются следующие аргументы.
-
-- `targetClassResolver` — определитель класса создаваемых объектов (см. `TargetClassResolver` ниже). 
-
-```php
-use App\SomeClass;
+```injectablephp
 use DobroSite\Mapping;
 
-$class = new Mapping\ClassType(
-    new Mapping\ClassType\ClassName(SomeClass::class),
-    new Mapping\ClassType\Properties(
-        new Mapping\ClassType\Property(
-            propertyName: 'foo'
-        ),
-        new Mapping\ClassType\Property(
-            propertyName: 'bar'
-        ),
-    ),
+$mapper = new Mapping\Callback(
+  input: strtolower(...),
+  output: strtoupper(...),
 );
 
-$object = $class->toPhpType(['foo' => 'FOO', 'bar' => 'BAR']);
-// $object → экземпляр SomeClass
-// $object->foo → 'FOO' 
-// $object->bar → 'BAR' 
+$mapper->input('FOO'); // 'foo'
+$mapper->output('foo'); // 'FOO'
 ```
 
-#### Определители имён классов
+### Chained
 
-Классы с интерфейсом [TargetClassResolver](src/ClassType/TargetClassResolver.php) используются для
-определения имени класса создаваемых объектов.
+Создаёт цепочку преобразований, выполняемых последовательно: в `input` от первого к последнему,
+в `output` — в обратном порядке.
 
-«Из коробки» доступны следующие определители.
+```injectablephp
+use DobroSite\Mapping;
 
-##### ClassName
-
-Всегда возвращает одно и то же, заданное в его конструкторе имя класса.
-
-```php
-new Mapping\ClassType\ClassName(SomeClass::class)
-```
-
-##### ClassNameMap
-
-Определяет имя класса на основе карты соответствия.
-
-```ephp
-new Mapping\ClassType\ClassNameMap(
-    'Type',
-    [
-        'runtime' => \RuntimeException::class,
-        'logic' => \LogicException::class,
-    ]
-)
-```
-
-Если во входных данных у параметра `Type` будет значение `runtime`, вернёт `RuntimeException`, если
-`logic` — вернёт `LogicException`.
-
-#### Свойства
-
-Список отображаемых свойств задаётся с помощью класса [Properties](src/ClassType/Properties.php),
-в конструктор которого надо передать экземпляр [Property](src/ClassType/Property.php) для
-каждого отображаемого свойства.
-
-**Аргументы Property**
-
-- `propertyName` — имя свойства в целевом классе.
-- `dataName` — имя свойства во входных данных. Если не указано, будет совпадать с `propertyName`.
-- `type` — тип свойства. Если не указан, будет использован [SameType](#sametype).
-- `defaultValue` — значение по умолчанию (необязательно).
-
-```php
-$class = new Mapping\ClassType(
-    new Mapping\ClassType\ClassName(SomeClass::class),
-    new Mapping\ClassType\Properties(
-        new Mapping\ClassType\Property(
-            propertyName: 'name',
-            dataName: 'Person Name',
-            defaultValue: 'Foo',
-        ),
-        new Mapping\ClassType\Property(
-            propertyName: 'address',
-            dataName: 'Address',
-            type: new Mapping\ClassType(
-                new Mapping\ClassType\ClassName(Address::class),
-                new Mapping\ClassType\Properties(/* … */)
-            )
-        ),
-    ),
+$mapper = new Mapping\Chained(
+  $mapper1,
+  $mapper2,
+  // …
 );
 ```
 
-#### Фабрики объектов
+### Constant
 
-Фабрики объектов — классы с интерфейсом [ObjectFactory](src/ClassType/ObjectFactory.php) —
-определяют как именно создавать объекты.
+Возвращает константное значение.
 
-Доступны следующие определители.
-
-##### DefaultObjectFactory
-
-Создаёт объекты обычным способом — с помощью оператора `new`. Если у класса есть конструктор, он
-будет вызван и в него будут переданы необходимые аргументы.
-
-##### CallableObjectFactory
-
-Позволяет задать произвольную фабрику в виде значения типа `callable`.
-
-```php
-new Mapping\ClassType\CallableObjectFactory([SomeFactory::class, 'create']);
-new Mapping\ClassType\CallableObjectFactory([$someFactory, 'create']);
-new Mapping\ClassType\CallableObjectFactory('some_factory');
-new Mapping\ClassType\CallableObjectFactory(fn() => new SomeClass());
-```
-
-### CollectionType
-
-Коллекция (массив) из значений любого другого типа.
-
-```php
+```injectablephp
 use DobroSite\Mapping;
 
-$itemType = new Mapping\FloatType();
-$type = new Mapping\CollectionType($itemType);
-$type->toPhpValue(['123.45', '54.321']); // [123.45, 54.321]
-```
-
-### CustomType
-
-Позволяет задать собственные произвольные правила преобразования с помощью функции.
-
-```php
-use DobroSite\Mapping;
-
-$type = new Mapping\CustomType('strtoupper');
-$type->toPhpValue('foo'); // 'FOO'
-
-$type = new Mapping\CustomType(fn(array $value): string => $value['foo']);
-$type->toPhpValue(['foo' => 'bar']); // 'bar'
+$mapper = new Mapping\Constant(input: 'foo', output: 'bar');
+$mapper->input(uniqid()); // 'foo'
+$mapper->output(uniqid()); // 'bar'
 ```
 
 ### EnumType
 
 Преобразовывает значения перечисляемых типов.
 
-```php
+```injectablephp
 use App\SomeEnum;
 use DobroSite\Mapping;
 
-$type = new Mapping\EnumType(SomeEnum::class);
-$type->toPhpValue('foo'); // SomeEnum::Foo
+$mapper = new Mapping\EnumType(SomeEnum::class);
+$mapper->input('foo'); // SomeEnum::Foo
+$mapper->output(SomeEnum::Foo); // 'foo' 
 ```
 
 ### FloatType
 
 Преобразовывает значение в вещественное число.
 
-```php
+```injectablephp
 use DobroSite\Mapping;
 
-$type = new Mapping\FloatType();
-$type->toPhpValue('1234.56'); // 1_234.56
+$mapper = new Mapping\FloatType();
+$mapper->input('1234.56'); // 1_234.56
 
-$type = new Mapping\FloatType(new \NumberFormatter('ru_RU', \NumberFormatter::DEFAULT_STYLE));
-$type->toPhpValue('1 234,56'); // 1_234.56
+$mapper = new Mapping\FloatType(
+  new \NumberFormatter('ru_RU', \NumberFormatter::DEFAULT_STYLE)
+);
+$mapper->input('1 234,56'); // 1_234.56
 ```
 
-### MapType
+### Map
 
 Преобразовывает значение на основе карты (ассоциативного массива).
 
-```php
+```injectablephp
 use DobroSite\Mapping;
 
-$type = new Mapping\MapType(['foo' => 'bar', 'bar' => 'baz']);
-$type->toPhpValue('foo'); // 'bar'
-$type->toPhpValue('bar'); // 'baz'
+$mapper = new Mapping\Map(['foo' => 'bar']);
+$mapper->input('foo'); // 'bar'
+$mapper->output('bar'); // 'foo'
 ```
 
-### NullableType
+### Nullable
 
-Модификатор для других типов, разрешающий им принимать значение `null`.
+Модификатор для других преобразователей, разрешающий им принимать значение `null`.
 
-```php
+```injectablephp
 use DobroSite\Mapping;
 
-$mainType = new Mapping\MapType(['foo' => 'bar']);
-$type = new Mapping\NullableType($mainType);
-$type->toPhpValue('foo'); // 'bar'
-$type->toPhpValue(null); // NULL
+$float = new Mapping\FloatType();
+$nullable = new Mapping\Nullable($float);
+
+$nullable->input('123'); // 123
+$nullable->input(null); // NULL
+$float->input(null); // → InvalidArgumentException
 ```
 
-### SameType
+### ObjectConstructor
 
-Не выполняет никаких преобразований. Пригоден для простых типов: строк, чисел.
+Отображает массив на объект, используя для создания объекта конструктор его класса.
 
-```php
+_Подробнее см. «Работа с объектами» ниже._
+
+В качестве аргумента `$class` в конструктор `ObjectConstructor` следует передать экземпляр `Mapper`,
+который вернёт имя класса создаваемого объекта. 
+
+
+```injectablephp
+use App\Foo;
 use DobroSite\Mapping;
 
-$type = new Mapping\SameType();
-$type->toPhpValue('foo'); // 'foo'
-$type->toPhpValue(123); // 123
+$mapper = new Mapping\ObjectConstructor(Mapping\Constant(Foo::class));
+$instanceOfFoo = $mapper->input(['foo' => 'foo value']);
 ```
 
-## Значения по умолчанию
-
-### DefaultValue
-
-Позволяет задать значение по умолчанию, например, для свойства объекта. Значение должно задаваться
-в формате исходных данных.
-
-```php
+```injectablephp
+use App\Foo;
+use App\Bar;
 use DobroSite\Mapping;
 
-new Mapping\ClassType(
-    new Mapping\ClassType\ClassName(SomeClass::class),
-    new Mapping\ClassType\Properties(
-        new Mapping\ClassType\Property(
-            propertyName: 'foo',
-            type: new ClassType(
-                new ClassType\ClassName(OtherClass::class),
-                new ClassType\Properties(/* … */),
-            ),
-            defaultValue: new DefaultValue([]), // ← Значение по умолчанию для свойства «foo».
-        )
-    )
+$mapper = new Mapping\ObjectConstructor(
+  Mapping\Callback(
+    fn(array $properties) => array_key_exists('bar', $properties) ? Bar::class : Foo::class, 
+  )
+);
+
+$instanceOfFoo = $mapper->input(['foo' => 'foo value']);
+$instanceOfBar = $mapper->input(['bar' => 'bar value']);
+```
+
+### ObjectFactory
+
+Отображает массив на объект, используя для создания объекта фабрику.
+
+_Подробнее см. «Работа с объектами» ниже._
+
+В качестве аргумента `$factory` в конструктор `ObjectFactory` следует передать фабрику для создания
+нужных объектов.
+
+```injectablephp
+use DobroSite\Mapping;
+
+$mapper = new Mapping\ObjectFactory('\App\factory_function');
+$mapper = new Mapping\ObjectFactory(factory_function(...));
+$mapper = new Mapping\ObjectFactory([Factory::class, 'staticMethod']);
+$mapper = new Mapping\ObjectFactory([$factory, 'method']);
+$mapper = new Mapping\ClassType\CallableObjectFactory(
+  fn(string $foo, string $bar) => new SomeClass($foo, $bar)
 );
 ```
 
-## Полиморфизм
+## Работа с объектами
 
 `TODO`
-
-- [OneOf](src/OneOf.php)
-  - [OneOf\ByDiscriminator](src/OneOf/ByDiscriminator.php)
-  - [OneOf\ByExistedField](src/OneOf/ByExistedField.php)
-
-## Расхождения в структуре
-
-`TODO`
-
-- [Path\SubPath](src/Path/SubPath.php)

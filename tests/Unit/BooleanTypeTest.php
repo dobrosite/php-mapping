@@ -5,91 +5,90 @@ declare(strict_types=1);
 namespace Tests\Unit;
 
 use DobroSite\Mapping\BooleanType;
-use DobroSite\Mapping\Exception\DataError;
-use DobroSite\Mapping\Type;
+use DobroSite\Mapping\Mapper;
 
 /**
  * @covers \DobroSite\Mapping\BooleanType
  */
-final class BooleanTypeTest extends TypeTestCase
+final class BooleanTypeTest extends MapperTestCase
 {
-    public static function toPhpValueDataProvider(): iterable
+    public static function inputDataProvider(): iterable
     {
         return [
             'true' => [
-                'givenValue' => 'true',
-                'expectedValue' => true,
+                'given' => 'true',
+                'expected' => true,
                 'arguments' => [],
             ],
             'false' => [
-                'givenValue' => 'false',
-                'expectedValue' => false,
+                'given' => 'false',
+                'expected' => false,
                 'arguments' => [],
             ],
             'да → true' => [
-                'givenValue' => 'да',
-                'expectedValue' => true,
+                'given' => 'да',
+                'expected' => true,
                 'arguments' => ['да', 'нет'],
             ],
             'нет → false' => [
-                'givenValue' => 'нет',
-                'expectedValue' => false,
+                'given' => 'нет',
+                'expected' => false,
                 'arguments' => ['да', 'нет'],
             ],
             '1 → true' => [
-                'givenValue' => 1,
-                'expectedValue' => true,
+                'given' => 1,
+                'expected' => true,
                 'arguments' => ['1', '0'],
             ],
             '0 → false' => [
-                'givenValue' => 0,
-                'expectedValue' => false,
+                'given' => 0,
+                'expected' => false,
                 'arguments' => ['1', '0'],
             ],
             'ДА → true (без учёта регистра)' => [
-                'givenValue' => 'ДА',
-                'expectedValue' => true,
+                'given' => 'ДА',
+                'expected' => true,
                 'arguments' => ['да', 'нет'],
             ],
             'НЕТ → false (без учёта регистра)' => [
-                'givenValue' => 'НЕТ',
-                'expectedValue' => false,
+                'given' => 'НЕТ',
+                'expected' => false,
                 'arguments' => ['да', 'нет'],
             ],
         ];
     }
 
-    public static function toDataValueDataProvider(): iterable
+    public static function outputDataProvider(): iterable
     {
         return [
             'true' => [
-                'givenValue' => true,
-                'expectedValue' => 'true',
+                'given' => true,
+                'expected' => 'true',
                 'arguments' => [],
             ],
             'false' => [
-                'givenValue' => false,
-                'expectedValue' => 'false',
+                'given' => false,
+                'expected' => 'false',
                 'arguments' => [],
             ],
             'да → true' => [
-                'givenValue' => true,
-                'expectedValue' => 'да',
+                'given' => true,
+                'expected' => 'да',
                 'arguments' => ['да', 'нет'],
             ],
             'нет → false' => [
-                'givenValue' => false,
-                'expectedValue' => 'нет',
+                'given' => false,
+                'expected' => 'нет',
                 'arguments' => ['да', 'нет'],
             ],
             '1 → true' => [
-                'givenValue' => true,
-                'expectedValue' => 1,
+                'given' => true,
+                'expected' => 1,
                 'arguments' => ['1', '0'],
             ],
             '0 → false' => [
-                'givenValue' => false,
-                'expectedValue' => 0,
+                'given' => false,
+                'expected' => 0,
                 'arguments' => ['1', '0'],
             ],
         ];
@@ -98,37 +97,62 @@ final class BooleanTypeTest extends TypeTestCase
     /**
      * @throws \Throwable
      */
-    public function testInvalidValueType(): void
+    public function testInvalidInputType(): void
     {
-        $type = new BooleanType();
+        $mapper = new BooleanType();
 
         $this->expectExceptionObject(
-            new DataError(
-                'Value for the BooleanType should be a scalar, but array given.'
+            new \InvalidArgumentException(
+                \sprintf(
+                    "Value for the %s::input should be a scalar, but array (\n) given.",
+                    BooleanType::class
+                )
             )
         );
 
-        $type->toPhpValue([]);
+        $mapper->input([]);
     }
 
     /**
      * @throws \Throwable
      */
-    public function testUnknownValue(): void
+    public function testInvalidInputValue(): void
     {
-        $type = new BooleanType();
+        $mapper = new BooleanType();
 
         $this->expectExceptionObject(
-            new DataError(
-                'Value "Foo" is not allowed for the BooleanType. Allowed values are "true" and "false".'
+            new \DomainException(
+                \sprintf(
+                    'Value "Foo" is not allowed for the %s::input. Allowed values are "true" and "false".',
+                    BooleanType::class
+                )
             )
         );
 
-        $type->toPhpValue('Foo');
+        $mapper->input('Foo');
     }
 
-    protected function createType(mixed ...$parameters): Type
+    /**
+     * @throws \Throwable
+     */
+    public function testInvalidOutputType(): void
     {
-        return new BooleanType(...$parameters);
+        $mapper = new BooleanType();
+
+        $this->expectExceptionObject(
+            new \InvalidArgumentException(
+                \sprintf(
+                    "Value for the %s::output should be a boolean, but 'true' given.",
+                    BooleanType::class
+                )
+            )
+        );
+
+        $mapper->output('true');
+    }
+
+    protected function createMapper(mixed ...$arguments): Mapper
+    {
+        return new BooleanType(...$arguments);
     }
 }

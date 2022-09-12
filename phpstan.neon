@@ -12,7 +12,5 @@ parameters:
     checkGenericClassInNonGenericObjectType: false
     ignoreErrors:
         - '/class-string/'
-        - path: 'src/ClassType/CallableObjectFactory.php'
-          message: '/Parameter .* of class ReflectionFunction constructor expects .*, mixed given/'
-        - path: 'tests/Unit/*TypeTest.php'
+        - path: 'tests/Unit/*Test.php'
           message: '/constructor expects .+, mixed given/'

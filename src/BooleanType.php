@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace DobroSite\Mapping;
 
-use DobroSite\Mapping\Exception\DataError;
-
-class BooleanType extends AbstractType
+class BooleanType implements Mapper
 {
     private readonly string $false;
 
@@ -20,37 +18,48 @@ class BooleanType extends AbstractType
         $this->false = \mb_strtolower($false, 'utf8');
     }
 
-    public function toDataValue(mixed $phpValue): string
+    public function input(mixed $source): bool
     {
-        return match ((bool) $phpValue) {
-            true => $this->true,
-            false => $this->false,
-        };
-    }
-
-    public function toPhpValue(mixed $dataValue): bool
-    {
-        if (!\is_scalar($dataValue)) {
-            throw new DataError(
+        if (!\is_scalar($source)) {
+            throw new \InvalidArgumentException(
                 \sprintf(
-                    'Value for the BooleanType should be a scalar, but %s given.',
-                    \gettype($dataValue)
+                    'Value for the %s should be a scalar, but %s given.',
+                    __METHOD__,
+                    formatValue($source)
                 )
             );
         }
 
-        return match (\mb_strtolower((string) $dataValue, 'utf8')) {
+        return match (\mb_strtolower((string) $source, 'utf8')) {
             $this->true => true,
             $this->false => false,
-            default => throw new DataError(
+            default => throw new \DomainException(
                 \sprintf(
                     'Value "%s" is not allowed for the %s. Allowed values are "%s" and "%s".',
-                    $dataValue,
-                    $this->getTypeName(),
+                    $source,
+                    __METHOD__,
                     $this->true,
                     $this->false
                 )
             ),
+        };
+    }
+
+    public function output(mixed $source): string
+    {
+        if (!\is_bool($source)) {
+            throw new \InvalidArgumentException(
+                \sprintf(
+                    'Value for the %s should be a boolean, but %s given.',
+                    __METHOD__,
+                    formatValue($source)
+                )
+            );
+        }
+
+        return match ((bool) $source) {
+            true => $this->true,
+            false => $this->false,
         };
     }
 }

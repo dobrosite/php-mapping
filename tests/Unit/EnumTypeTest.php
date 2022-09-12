@@ -5,26 +5,16 @@ declare(strict_types=1);
 namespace Tests\Unit;
 
 use DobroSite\Mapping\EnumType;
-use DobroSite\Mapping\Exception\ConfigurationError;
-use DobroSite\Mapping\Exception\DataError;
-use DobroSite\Mapping\Type;
+use DobroSite\Mapping\Mapper;
 use Tests\Fixture\TestEnum;
 use Tests\Fixture\TestEnum2;
 
 /**
  * @covers \DobroSite\Mapping\EnumType
  */
-final class EnumTypeTest extends TypeTestCase
+final class EnumTypeTest extends MapperTestCase
 {
-    public static function toDataValueDataProvider(): iterable
-    {
-        return [
-            'foo' => [TestEnum::Foo, 'foo', [TestEnum::class]],
-            'bar' => [TestEnum::Bar, 'bar', [TestEnum::class]],
-        ];
-    }
-
-    public static function toPhpValueDataProvider(): iterable
+    public static function inputDataProvider(): iterable
     {
         return [
             'foo' => ['foo', TestEnum::Foo, [TestEnum::class]],
@@ -32,47 +22,73 @@ final class EnumTypeTest extends TypeTestCase
         ];
     }
 
-    /**
-     * @throws \Throwable
-     */
-    public function testNotEnum(): void
+    public static function outputDataProvider(): iterable
     {
-        $this->expectExceptionObject(new ConfigurationError('stdClass is not an enum type.'));
-
-        new EnumType(\stdClass::class);
+        return [
+            'foo' => [TestEnum::Foo, 'foo', [TestEnum::class]],
+            'bar' => [TestEnum::Bar, 'bar', [TestEnum::class]],
+        ];
     }
 
-    /**
-     * @throws \Throwable
-     */
-    public function testPhpValueIsNotAnEnumCase(): void
-    {
-        $this->expectExceptionObject(new DataError('Value \'foo\' is not a valid enum case.'));
-
-        $type = new EnumType(TestEnum::class);
-        $type->toDataValue('foo');
-    }
-
-    /**
-     * @throws \Throwable
-     */
-    public function testPhpValueIsNotFromTypeEnum(): void
+    public function testInvalidInputType(): void
     {
         $this->expectExceptionObject(
-            new DataError(
+            new \InvalidArgumentException(
+                \sprintf(
+                    "Argument for the %s::input should be one of [string], but array (\n) given.",
+                    EnumType::class
+                )
+            )
+        );
+
+        $type = new EnumType(TestEnum::class);
+        $type->input([]);
+    }
+
+    public function testInvalidOutputType(): void
+    {
+        $this->expectExceptionObject(
+            new \InvalidArgumentException(
+                \sprintf(
+                    'Argument \'foo\' for the %s::output is not a valid enum case.',
+                    EnumType::class
+                )
+            )
+        );
+
+        $type = new EnumType(TestEnum::class);
+        $type->output('foo');
+    }
+
+    /**
+     * @throws \Throwable
+     */
+    public function testInvalidOutputValue(): void
+    {
+        $this->expectExceptionObject(
+            new \DomainException(
                 \sprintf('Value %s::A is not a case of %s.', TestEnum2::class, TestEnum::class)
             )
         );
 
         $type = new EnumType(TestEnum::class);
-        $type->toDataValue(TestEnum2::A);
+        $type->output(TestEnum2::A);
     }
 
     /**
      * @throws \Throwable
      */
-    protected function createType(mixed ...$parameters): Type
+    public function testNotEnum(): void
     {
-        return new EnumType(...$parameters);
+        $this->expectExceptionObject(
+            new \InvalidArgumentException('stdClass is not an enum type.')
+        );
+
+        new EnumType(\stdClass::class);
+    }
+
+    protected function createMapper(mixed ...$arguments): Mapper
+    {
+        return new EnumType(...$arguments);
     }
 }

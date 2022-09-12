@@ -4,32 +4,30 @@ declare(strict_types=1);
 
 namespace DobroSite\Mapping;
 
-use DobroSite\Mapping\Exception\DataError;
-
 /**
- * @param array<string, mixed> $data
+ * @param string[] $expected
  *
- * @throws DataError
+ * @throws \InvalidArgumentException
  */
-function getByPath(string $path, array $data): mixed
+function checkSourceType(Mapper $mapper, string $method, array $expected, mixed $given): void
 {
-    $keys = \explode('.', $path);
+    $type = \gettype($given);
+    $type = match ($type) {
+        'double' => 'float',
+        default => $type,
+    };
 
-    while ($keys !== []) {
-        $key = \array_shift($keys);
-        if (!\array_key_exists($key, $data)) {
-            throw new DataError(
-                \sprintf(
-                    'Part "%s" of path "%s" does not exists.',
-                    \implode('.', [$key, ...$keys]),
-                    $path
-                )
-            );
-        }
-        $data = $data[$key];
+    if (!\in_array($type, $expected, true)) {
+        throw new \InvalidArgumentException(
+            \sprintf(
+                'Argument for the %s::%s should be one of [%s], but %s given.',
+                $mapper::class,
+                $method,
+                \implode(', ', $expected),
+                formatValue($given)
+            )
+        );
     }
-
-    return $data;
 }
 
 function formatValue(mixed $value): string

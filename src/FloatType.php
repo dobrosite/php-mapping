@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace DobroSite\Mapping;
 
-use DobroSite\Mapping\Exception\DataError;
-
-class FloatType extends AbstractType
+class FloatType implements Mapper
 {
     private readonly \NumberFormatter $formatter;
 
@@ -19,37 +17,23 @@ class FloatType extends AbstractType
         );
     }
 
-    public function toDataValue(mixed $phpValue): string
+    public function input(mixed $source): float
     {
-        if (!\is_float($phpValue)) {
-            throw new DataError(
-                \sprintf(
-                    'PHP value for %s should float, but %s given.',
-                    $this->getTypeName(),
-                    \gettype($phpValue)
-                )
-            );
+        checkSourceType($this, 'input', ['float', 'integer', 'string'], $source);
+        \assert(\is_float($source) || \is_int($source) || \is_string($source));
+
+        if (\is_string($source)) {
+            return (float) $this->formatter->parse($source);
         }
 
-        return (string) $this->formatter->format($phpValue);
+        return (float) $source;
     }
 
-    public function toPhpValue(mixed $dataValue): mixed
+    public function output(mixed $source): string
     {
-        if (\is_int($dataValue) || \is_float($dataValue)) {
-            return $dataValue;
-        }
+        checkSourceType($this, 'output', ['float', 'integer'], $source);
+        \assert(\is_float($source) || \is_int($source));
 
-        if (!\is_string($dataValue)) {
-            throw new DataError(
-                \sprintf(
-                    'Value for %s should be either integer, float or string, but %s given.',
-                    $this->getTypeName(),
-                    \gettype($dataValue)
-                )
-            );
-        }
-
-        return $this->formatter->parse($dataValue);
+        return (string) $this->formatter->format($source);
     }
 }

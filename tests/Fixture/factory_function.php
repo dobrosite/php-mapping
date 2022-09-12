@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Tests\Fixture\ClassWithConstructor;
+namespace Tests\Fixture;
 
 function test_factory_function(string $foo, string $bar): ClassWithConstructor
 {
