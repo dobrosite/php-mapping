@@ -182,6 +182,20 @@ $mapper = new Mapping\Chained(
 );
 ```
 
+### Collection
+
+Применяет указанный преобразователь к каждому элементу коллекции.
+
+```php
+use DobroSite\Mapping;
+
+$mapper = new Mapping\Collection(
+  new Mapping\FloatType(),
+);
+
+$mapper->input(['123.45', '67.89']); // [123.45, 67.89]
+```
+
 ### Constant
 
 Возвращает константное значение.

@@ -4,26 +4,26 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use DobroSite\Mapping\ArrayValues;
 use DobroSite\Mapping\AsIs;
 use DobroSite\Mapping\Callback;
+use DobroSite\Mapping\Collection;
 use DobroSite\Mapping\Exception\InvalidSourceType;
 use DobroSite\Mapping\Mapper;
 
 /**
- * @covers \DobroSite\Mapping\ArrayValues
+ * @covers \DobroSite\Mapping\Collection
  */
-final class ArrayValuesTest extends MapperTestCase
+final class CollectionTest extends MapperTestCase
 {
     public static function inputDataProvider(): iterable
     {
         return [
             [
-                'given' => ['foo' => 'foo', 'bar' => 'bar'],
-                'expected' => ['foo' => 'FOO', 'bar' => 'bar'],
+                'given' => ['foo', 'bar'],
+                'expected' => ['FOO', 'BAR'],
                 'arguments' => [
                     /** @noRector */
-                    ['foo' => new Callback(input: \strtoupper(...), output: \strtolower(...))],
+                    new Callback(input: \strtoupper(...), output: \strtolower(...)),
                 ],
             ],
         ];
@@ -33,34 +33,25 @@ final class ArrayValuesTest extends MapperTestCase
     {
         return [
             [
-                'given' => ['foo' => 'FOO', 'bar' => 'bar'],
-                'expected' => ['foo' => 'foo', 'bar' => 'bar'],
+                'given' => ['FOO', 'BAR'],
+                'expected' => ['foo', 'bar'],
                 'arguments' => [
                     /** @noRector */
-                    ['foo' => new Callback(input: \strtoupper(...), output: \strtolower(...))],
+                    new Callback(input: \strtoupper(...), output: \strtolower(...)),
                 ],
             ],
         ];
     }
 
-    /**
-     * @throws \Throwable
-     */
-    public function testInputKeyNotExists(): void
-    {
-        $mapper = new ArrayValues(['foo' => new AsIs()]);
-        self::assertSame([], $mapper->input([]));
-    }
-
     public function testInvalidInputType(): void
     {
-        $mapper = new ArrayValues([]);
+        $mapper = new Collection(new AsIs());
 
         $this->expectExceptionObject(
             new InvalidSourceType(
                 \sprintf(
                     "Argument for the %s::input should be one of [array], but 'foo' given.",
-                    ArrayValues::class
+                    Collection::class
                 )
             )
         );
@@ -70,13 +61,13 @@ final class ArrayValuesTest extends MapperTestCase
 
     public function testInvalidOutputType(): void
     {
-        $mapper = new ArrayValues([]);
+        $mapper = new Collection(new AsIs());
 
         $this->expectExceptionObject(
             new InvalidSourceType(
                 \sprintf(
                     "Argument for the %s::output should be one of [array], but 'foo' given.",
-                    ArrayValues::class
+                    Collection::class
                 )
             )
         );
@@ -86,6 +77,6 @@ final class ArrayValuesTest extends MapperTestCase
 
     protected function createMapper(mixed ...$arguments): Mapper
     {
-        return new ArrayValues(...$arguments);
+        return new Collection(...$arguments);
     }
 }
