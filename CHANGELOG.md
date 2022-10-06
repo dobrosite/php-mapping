@@ -14,7 +14,12 @@
 
 ### Добавлено
 
-- Добавлены интерфейсы `InputMapper`, `OutputMapper`, и `BidirectionalMapper`.
+- Добавлены интерфейсы:
+  - `InputMapper`
+  - `OutputMapper`
+  - `BidirectionalMapper`
+- Добавлены классы:
+  - `Merge`
 
 
 ## 0.8.1 - 13.09.2022

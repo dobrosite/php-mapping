@@ -282,6 +282,24 @@ $mapper->input(['foo' => 'foo value']);
 
 ## OutputMapper
 
+### Merge
+
+Принимает в конструкторе несколько экземпляров `OutputMapper`. При вызове метода `output` поочерёдно
+передаёт полученное значение каждому из преобразователей, затем объединяет возвращённые ими
+результаты с помощью `array_merge`.
+
+```php
+use DobroSite\Mapping;
+
+$mapper = new Mapping\Merge(
+ new Mapping\Constant(output: ['bar' => 'BAR']),
+ new Mapping\Constant(output: ['baz' => 'BAZ']),
+);
+
+$mapper->output(['foo' => 'FOO']);
+// ['foo' => 'FOO', 'bar' => 'BAR', 'baz' => 'BAZ']
+```
+
 ---
 
 ### ObjectConstructor
