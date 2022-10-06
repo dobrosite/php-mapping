@@ -9,7 +9,7 @@ use DobroSite\Mapping\Exception\InvalidMapping;
 use DobroSite\Mapping\Exception\InvalidSourceType;
 use DobroSite\Mapping\Exception\InvalidSourceValue;
 
-class ObjectConstructor extends ObjectMapper
+class ObjectConstructor extends AbstractObjectMapper
 {
     public function __construct(
         private readonly Mapper $class,

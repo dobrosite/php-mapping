@@ -15,7 +15,7 @@ use function Tests\Fixture\test_factory_function;
 
 /**
  * @covers \DobroSite\Mapping\ObjectFactory
- * @covers \DobroSite\Mapping\ObjectMapper
+ * @covers \DobroSite\Mapping\AbstractObjectMapper
  */
 final class ObjectFactoryTest extends MapperTestCase
 {

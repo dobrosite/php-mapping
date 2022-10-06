@@ -17,7 +17,7 @@ use Tests\Fixture\ClassWithPrivateConstructor;
 
 /**
  * @covers \DobroSite\Mapping\ObjectConstructor
- * @covers \DobroSite\Mapping\ObjectMapper
+ * @covers \DobroSite\Mapping\AbstractObjectMapper
  */
 final class ObjectConstructorTest extends MapperTestCase
 {

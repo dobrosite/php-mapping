@@ -7,7 +7,7 @@ namespace DobroSite\Mapping;
 use DobroSite\Mapping\Exception\InsufficientInput;
 use DobroSite\Mapping\Exception\InvalidMapping;
 
-class ObjectFactory extends ObjectMapper
+class ObjectFactory extends AbstractObjectMapper
 {
     /**
      * @var callable
