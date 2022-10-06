@@ -6,6 +6,9 @@
 
 ## Не выпущено
 
+
+## 0.9.0 - 06.10.2022
+
 ### Изменено
 
 - Метод `input` из `Mapper` перенесён в `InputMapper`.
@@ -24,6 +27,7 @@
     - `Merge`
     - `PublicProperties`
     - `ObjectMapper`
+
 
 ## 0.8.1 - 13.09.2022
 
