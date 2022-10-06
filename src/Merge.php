@@ -23,10 +23,7 @@ class Merge implements OutputMapper
      */
     public function output(mixed $source): array
     {
-        checkSourceType($this, 'output', ['array'], $source);
-        \assert(\is_array($source));
-
-        $result = [$source];
+        $result = [];
         foreach ($this->mappers as $mapper) {
             $array = $mapper->output($source);
             if (!\is_array($array)) {

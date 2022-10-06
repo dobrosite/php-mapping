@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Unit;
 
 use DobroSite\Mapping\Constant;
-use DobroSite\Mapping\Exception\InvalidSourceType;
 use DobroSite\Mapping\Merge;
 use DobroSite\Mapping\OutputMapper;
 
@@ -17,9 +16,10 @@ final class MergeTest extends OutputMapperTestCase
     public static function outputDataProvider(): iterable
     {
         yield 'foo+bar' => [
-            'given' => ['foo' => 'foo value'],
+            'given' => null,
             'expected' => ['foo' => 'foo value', 'bar' => 'bar value'],
             'arguments' => [
+                new Constant(output: ['foo' => 'foo value']),
                 new Constant(output: ['bar' => 'bar value']),
             ],
         ];
@@ -27,18 +27,7 @@ final class MergeTest extends OutputMapperTestCase
 
     public function testInvalidOutputType(): void
     {
-        $mapper = new Merge();
-
-        $this->expectExceptionObject(
-            new InvalidSourceType(
-                \sprintf(
-                    "Argument for the %s::output should be one of [array], but 'foo' given.",
-                    Merge::class
-                )
-            )
-        );
-
-        $mapper->output('foo');
+        $this->expectNotToPerformAssertions();
     }
 
     protected function createMapper(mixed ...$arguments): OutputMapper
