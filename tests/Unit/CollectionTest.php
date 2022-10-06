@@ -13,7 +13,7 @@ use DobroSite\Mapping\Mapper;
 /**
  * @covers \DobroSite\Mapping\Collection
  */
-final class CollectionTest extends MapperTestCase
+final class CollectionTest extends BidirectionalTestCase
 {
     public static function inputDataProvider(): iterable
     {

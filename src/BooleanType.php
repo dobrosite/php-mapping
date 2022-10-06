@@ -7,7 +7,7 @@ namespace DobroSite\Mapping;
 use DobroSite\Mapping\Exception\InvalidSourceType;
 use DobroSite\Mapping\Exception\InvalidSourceValue;
 
-class BooleanType implements Mapper
+class BooleanType implements BidirectionalMapper
 {
     private readonly string $false;
 

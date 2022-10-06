@@ -10,7 +10,7 @@ use DobroSite\Mapping\Mapper;
 /**
  * @covers \DobroSite\Mapping\Callback
  */
-final class CallbackTest extends MapperTestCase
+final class CallbackTest extends BidirectionalTestCase
 {
     public static function inputDataProvider(): iterable
     {

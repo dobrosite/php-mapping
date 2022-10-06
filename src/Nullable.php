@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace DobroSite\Mapping;
 
-class Nullable implements Mapper
+class Nullable implements BidirectionalMapper
 {
     public function __construct(
         private readonly Mapper $mapper,

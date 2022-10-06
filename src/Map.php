@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace DobroSite\Mapping;
 
-class Map implements Mapper
+class Map implements BidirectionalMapper
 {
     /**
      * @param array<int|string, mixed> $map

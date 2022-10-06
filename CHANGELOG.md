@@ -8,7 +8,13 @@
 
 ### Изменено
 
+- Метод `input` из `Mapper` перенесён в `InputMapper`.
+- Метод `output` из `Mapper` перенесён в `OutputMapper`.
 - `ObjectMapper` переименован в `AbstractObjectMapper`.
+
+### Добавлено
+
+- Добавлены интерфейсы `InputMapper`, `OutputMapper`, и `BidirectionalMapper`.
 
 
 ## 0.8.1 - 13.09.2022

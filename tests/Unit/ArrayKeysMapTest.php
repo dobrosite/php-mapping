@@ -11,7 +11,7 @@ use DobroSite\Mapping\Mapper;
 /**
  * @covers \DobroSite\Mapping\ArrayKeysMap
  */
-final class ArrayKeysMapTest extends MapperTestCase
+final class ArrayKeysMapTest extends BidirectionalTestCase
 {
     public static function inputDataProvider(): iterable
     {

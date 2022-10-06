@@ -11,7 +11,7 @@ use DobroSite\Mapping\Mapper;
 /**
  * @covers \DobroSite\Mapping\Map
  */
-final class MapTest extends MapperTestCase
+final class MapTest extends BidirectionalTestCase
 {
     public static function inputDataProvider(): iterable
     {

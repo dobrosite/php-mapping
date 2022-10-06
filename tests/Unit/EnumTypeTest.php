@@ -14,7 +14,7 @@ use Tests\Fixture\TestEnum2;
 /**
  * @covers \DobroSite\Mapping\EnumType
  */
-final class EnumTypeTest extends MapperTestCase
+final class EnumTypeTest extends BidirectionalTestCase
 {
     public static function inputDataProvider(): iterable
     {

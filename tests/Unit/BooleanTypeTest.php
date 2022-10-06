@@ -12,7 +12,7 @@ use DobroSite\Mapping\Mapper;
 /**
  * @covers \DobroSite\Mapping\BooleanType
  */
-final class BooleanTypeTest extends MapperTestCase
+final class BooleanTypeTest extends BidirectionalTestCase
 {
     public static function inputDataProvider(): iterable
     {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace DobroSite\Mapping;
 
-class Chained implements Mapper
+class Chained implements BidirectionalMapper
 {
     /**
      * @var Mapper[]
@@ -19,7 +19,9 @@ class Chained implements Mapper
     public function input(mixed $source): mixed
     {
         foreach ($this->mappers as $mapper) {
-            $source = $mapper->input($source);
+            if ($mapper instanceof InputMapper) {
+                $source = $mapper->input($source);
+            }
         }
 
         return $source;
@@ -28,7 +30,9 @@ class Chained implements Mapper
     public function output(mixed $source): mixed
     {
         foreach (\array_reverse($this->mappers) as $mapper) {
-            $source = $mapper->output($source);
+            if ($mapper instanceof OutputMapper) {
+                $source = $mapper->output($source);
+            }
         }
 
         return $source;

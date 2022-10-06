@@ -6,13 +6,13 @@ namespace DobroSite\Mapping;
 
 use DobroSite\Mapping\Exception\InvalidMapping;
 
-class Apply implements Mapper
+class Apply implements BidirectionalMapper
 {
-    private readonly Mapper $input;
+    private readonly InputMapper $input;
 
-    private readonly Mapper $output;
+    private readonly OutputMapper $output;
 
-    public function __construct(Mapper $input = null, Mapper $output = null)
+    public function __construct(InputMapper $input = null, OutputMapper $output = null)
     {
         $this->input = $input ?: new AsIs();
         $this->output = $output ?: new AsIs();

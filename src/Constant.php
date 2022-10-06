@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace DobroSite\Mapping;
 
-class Constant implements Mapper
+class Constant implements BidirectionalMapper
 {
     public function __construct(
         private readonly mixed $input = null,

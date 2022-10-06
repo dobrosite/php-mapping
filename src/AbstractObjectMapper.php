@@ -8,7 +8,7 @@ use DobroSite\Mapping\Exception\InsufficientInput;
 use DobroSite\Mapping\Exception\InvalidMapping;
 use DobroSite\Mapping\Exception\InvalidSourceType;
 
-abstract class AbstractObjectMapper implements Mapper
+abstract class AbstractObjectMapper implements BidirectionalMapper
 {
     public function input(mixed $source): object
     {

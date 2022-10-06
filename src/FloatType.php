@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace DobroSite\Mapping;
 
-class FloatType implements Mapper
+class FloatType implements BidirectionalMapper
 {
     private readonly \NumberFormatter $formatter;
 

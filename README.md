@@ -5,7 +5,7 @@
 Основная идея библиотеки — предоставить «кирпичики» из которых можно построить свои правила
 отображения данных для любой ситуации.
 
-## Основы
+## Определения
 
 - **Входные данные** (**input**) — структурированные данные, которые требуется отобразить на
   структуры PHP.
@@ -13,13 +13,25 @@
 - **Массив** (**array**) — этим словом в библиотеке обозначаются **только ассоциативные массивы**.
 - **Коллекция** (**collection**) — индексированный (неассоциативный) массив однотипных значений.
 
-## Mapper
+## Основы
 
-Сердцем библиотеки является интерфейс [Mapper](src/Mapper.php), содержащий всего два метода:
+Сердцем библиотеки являются интерфейсы `*Mapper`:
+
+### Mapper
+
+Пустой интерфейс, который реализуют все преобразователи.
+
+### InputMapper
+
+Преобразователь входных данных. Содержит единственный метод:
 
 ```php
 public function input(mixed $source): mixed;
 ```
+
+### InputMapper
+
+Преобразователь выходных данных. Содержит единственный метод:
 
 Отображает входные данные `$source` на структуру PHP и возвращает её. 
 
@@ -27,13 +39,15 @@ public function input(mixed $source): mixed;
 public function output(mixed $source): mixed;
 ```
 
-Выполняет обратное действие.
+### BidirectionalMapper
+
+Объединяет в себе `InputMapper` и `OutputMapper`.
 
 ## Примеры
 
 `TODO`
 
-## Справочник классов
+## BidirectionalMapper
 
 ### Apply
 
@@ -53,24 +67,9 @@ $mapper->input('123.45'); // 123.45
 $mapper->input('foo'); // 'foo'
 ```
 
-### ArrayDefaults
-
-Позволяет задать значения по умолчанию для ключей, отсутствующих во входном массиве.
-
-```php
-use DobroSite\Mapping;
-
-$mapper = new Mapping\ArrayDefaults([
-  'bar' => 'bar value',
-]);
-
-$mapper->input(['foo' => 'foo value']);
-// ['foo' => 'foo value', 'bar' => 'bar value']
-```
-
 ### ArrayKeys
 
-Применяет указанное преобразование последовательно к каждому ключу ассоциативного массива. 
+Применяет указанное преобразование последовательно к каждому ключу ассоциативного массива.
 
 ```php
 use DobroSite\Mapping;
@@ -263,6 +262,27 @@ $nullable->input('123'); // 123
 $nullable->input(null); // NULL
 $float->input(null); // → InvalidArgumentException
 ```
+
+## InputMapper
+
+### ArrayDefaults
+
+Позволяет задать значения по умолчанию для ключей, отсутствующих во входном массиве.
+
+```php
+use DobroSite\Mapping;
+
+$mapper = new Mapping\ArrayDefaults([
+  'bar' => 'bar value',
+]);
+
+$mapper->input(['foo' => 'foo value']);
+// ['foo' => 'foo value', 'bar' => 'bar value']
+```
+
+## OutputMapper
+
+---
 
 ### ObjectConstructor
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace DobroSite\Mapping;
 
-class Callback implements Mapper
+class Callback implements BidirectionalMapper
 {
     protected mixed $input;
 

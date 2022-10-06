@@ -6,7 +6,7 @@ namespace DobroSite\Mapping;
 
 use DobroSite\Mapping\Exception\InvalidSourceType;
 
-class ArrayDefaults implements Mapper
+class ArrayDefaults implements InputMapper
 {
     /**
      * @param array<string, mixed> $defaults
@@ -27,18 +27,5 @@ class ArrayDefaults implements Mapper
         \assert(\is_array($source));
 
         return \array_merge($this->defaults, $source);
-    }
-
-    /**
-     * @return array<string, mixed>
-     *
-     * @throws InvalidSourceType
-     */
-    public function output(mixed $source): array
-    {
-        checkSourceType($this, 'output', ['array'], $source);
-        \assert(\is_array($source));
-
-        return $source;
     }
 }

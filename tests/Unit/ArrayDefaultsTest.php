@@ -11,7 +11,7 @@ use DobroSite\Mapping\Mapper;
 /**
  * @covers \DobroSite\Mapping\ArrayDefaults
  */
-final class ArrayDefaultsTest extends MapperTestCase
+final class ArrayDefaultsTest extends InputMapperTestCase
 {
     public static function inputDataProvider(): iterable
     {
@@ -33,19 +33,6 @@ final class ArrayDefaultsTest extends MapperTestCase
         ];
     }
 
-    public static function outputDataProvider(): iterable
-    {
-        return [
-            [
-                'given' => ['foo' => 'foo value', 'bar' => 'bar value'],
-                'expected' => ['foo' => 'foo value', 'bar' => 'bar value'],
-                'arguments' => [
-                    ['bar' => 'bar value'],
-                ],
-            ],
-        ];
-    }
-
     public function testInvalidInputType(): void
     {
         $mapper = new ArrayDefaults([]);
@@ -60,11 +47,6 @@ final class ArrayDefaultsTest extends MapperTestCase
         );
 
         $mapper->input('foo');
-    }
-
-    public function testInvalidOutputType(): void
-    {
-        $this->expectNotToPerformAssertions();
     }
 
     protected function createMapper(mixed ...$arguments): Mapper

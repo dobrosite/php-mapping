@@ -9,7 +9,7 @@ use DobroSite\Mapping\Exception\InvalidMapping;
 use DobroSite\Mapping\Exception\InvalidSourceType;
 use DobroSite\Mapping\Exception\InvalidSourceValue;
 
-class Collection implements Mapper
+class Collection implements BidirectionalMapper
 {
     public function __construct(
         private readonly Mapper $mapper
@@ -29,8 +29,10 @@ class Collection implements Mapper
         checkSourceType($this, 'input', ['array'], $source);
         \assert(\is_array($source));
 
-        foreach ($source as &$item) {
-            $item = $this->mapper->input($item);
+        if ($this->mapper instanceof InputMapper) {
+            foreach ($source as &$item) {
+                $item = $this->mapper->input($item);
+            }
         }
 
         return $source;
@@ -48,8 +50,10 @@ class Collection implements Mapper
         checkSourceType($this, 'output', ['array'], $source);
         \assert(\is_array($source));
 
-        foreach ($source as &$item) {
-            $item = $this->mapper->output($item);
+        if ($this->mapper instanceof OutputMapper) {
+            foreach ($source as &$item) {
+                $item = $this->mapper->output($item);
+            }
         }
 
         return $source;

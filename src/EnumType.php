@@ -7,7 +7,7 @@ namespace DobroSite\Mapping;
 use DobroSite\Mapping\Exception\InvalidSourceType;
 use DobroSite\Mapping\Exception\InvalidSourceValue;
 
-class EnumType implements Mapper
+class EnumType implements BidirectionalMapper
 {
     /**
      * @param class-string $enumType

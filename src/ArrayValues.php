@@ -7,7 +7,7 @@ namespace DobroSite\Mapping;
 use DobroSite\Mapping\Exception\InsufficientInput;
 use DobroSite\Mapping\Exception\InvalidSourceType;
 
-class ArrayValues implements Mapper
+class ArrayValues implements BidirectionalMapper
 {
     /**
      * @param array<string, Mapper> $mappers
@@ -29,7 +29,7 @@ class ArrayValues implements Mapper
         \assert(\is_array($source));
 
         foreach ($this->mappers as $name => $mapper) {
-            if (\array_key_exists($name, $source)) {
+            if (($mapper instanceof InputMapper) && \array_key_exists($name, $source)) {
                 $source[$name] = $mapper->input($source[$name]);
             }
         }
@@ -48,7 +48,9 @@ class ArrayValues implements Mapper
         \assert(\is_array($source));
 
         foreach ($this->mappers as $name => $mapper) {
-            $source[$name] = $mapper->output($source[$name]);
+            if ($mapper instanceof OutputMapper) {
+                $source[$name] = $mapper->output($source[$name]);
+            }
         }
 
         return $source;

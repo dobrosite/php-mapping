@@ -11,7 +11,7 @@ use DobroSite\Mapping\Nullable;
 /**
  * @covers \DobroSite\Mapping\Nullable
  */
-final class NullableTest extends MapperTestCase
+final class NullableTest extends BidirectionalTestCase
 {
     public static function inputDataProvider(): iterable
     {

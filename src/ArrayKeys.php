@@ -9,10 +9,10 @@ use DobroSite\Mapping\Exception\InvalidMapping;
 use DobroSite\Mapping\Exception\InvalidSourceType;
 use DobroSite\Mapping\Exception\InvalidSourceValue;
 
-class ArrayKeys implements Mapper
+class ArrayKeys implements BidirectionalMapper
 {
     public function __construct(
-        private readonly Mapper $mapper,
+        private readonly BidirectionalMapper $mapper,
     ) {
     }
 
