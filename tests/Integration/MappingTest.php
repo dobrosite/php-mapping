@@ -10,7 +10,7 @@ use DobroSite\Mapping\ArrayValues;
 use DobroSite\Mapping\Callback;
 use DobroSite\Mapping\Chained;
 use DobroSite\Mapping\Constant;
-use DobroSite\Mapping\ObjectConstructor;
+use DobroSite\Mapping\Constructor;
 use PHPUnit\Framework\TestCase;
 use Tests\Fixture\Address;
 use Tests\Fixture\Lead;
@@ -41,10 +41,10 @@ final class MappingTest extends TestCase
                         input: fn(string $city) => ['city' => $city],
                         output: fn(array $address) => $address['city'],
                     ),
-                    new ObjectConstructor(new Constant(input: Address::class)),
+                    new Constructor(new Constant(input: Address::class)),
                 ),
             ]),
-            new ObjectConstructor(new Constant(input: Lead::class)),
+            new Constructor(new Constant(input: Lead::class)),
         );
 
         $object = $mapper->input([

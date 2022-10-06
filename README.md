@@ -207,6 +207,38 @@ $mapper->input(uniqid()); // 'foo'
 $mapper->output(uniqid()); // 'bar'
 ```
 
+### Constructor
+
+Отображает массив на объект, используя для создания объекта конструктор его класса.
+
+_Подробнее см. «Работа с объектами» ниже._
+
+В качестве аргумента `$class` в конструктор `Constructor` следует передать имя класса или экземпляр
+`Mapper`, который вернёт имя класса создаваемого объекта.
+
+```php
+use App\Foo;
+use DobroSite\Mapping;
+
+$mapper = new Mapping\Constructor(Foo::class);
+$instanceOfFoo = $mapper->input(['foo' => 'foo value']);
+```
+
+```php
+use App\Foo;
+use App\Bar;
+use DobroSite\Mapping;
+
+$mapper = new Mapping\ObjectConstructor(
+  Mapping\Callback(
+    fn(array $properties) => array_key_exists('bar', $properties) ? Bar::class : Foo::class, 
+  )
+);
+
+$instanceOfFoo = $mapper->input(['foo' => 'foo value']);
+$instanceOfBar = $mapper->input(['bar' => 'bar value']);
+```
+
 ### EnumType
 
 Преобразовывает значения перечисляемых типов.
@@ -263,6 +295,46 @@ $nullable->input(null); // NULL
 $float->input(null); // → InvalidArgumentException
 ```
 
+### ObjectFactory
+
+Отображает массив на объект, используя для создания объекта фабрику.
+
+_Подробнее см. «Работа с объектами» ниже._
+
+В качестве аргумента `$factory` в конструктор `ObjectFactory` следует передать фабрику для создания
+нужных объектов.
+
+```php
+use DobroSite\Mapping;
+
+$mapper = new Mapping\ObjectFactory('\App\factory_function');
+$mapper = new Mapping\ObjectFactory(factory_function(...));
+$mapper = new Mapping\ObjectFactory([Factory::class, 'staticMethod']);
+$mapper = new Mapping\ObjectFactory([$factory, 'method']);
+$mapper = new Mapping\ClassType\CallableObjectFactory(
+  fn(string $foo, string $bar) => new SomeClass($foo, $bar)
+);
+```
+
+### ObjectMapper
+
+Комбинирующий преобразователь, объединяющий `InputMapper` и `OutputMapper` для преобразования
+массив ⇆ объект.
+
+В первом аргументе (`input`) следует передать экземпляр `InputMapper`, создающий объект из массива,
+например, [Constructor](#Constructor) или [ObjectFactory](#ObjectFactory).
+
+Во втором аргументе (`output`) можно передать экземпляр `OutputMapper`, создающий массив из объекта.
+Если аргумент не указан, будет использован [PublicProperties](#PublicProperties).
+
+```php
+use DobroSite\Mapping;
+
+$mapper = new Mapping\ObjectMapper(
+  input: new Mapping\Constructor(Foo::class),
+);
+```
+
 ## InputMapper
 
 ### ArrayDefaults
@@ -300,61 +372,10 @@ $mapper->output(['foo' => 'FOO']);
 // ['foo' => 'FOO', 'bar' => 'BAR', 'baz' => 'BAZ']
 ```
 
----
+### PublicProperties
 
-### ObjectConstructor
-
-Отображает массив на объект, используя для создания объекта конструктор его класса.
-
-_Подробнее см. «Работа с объектами» ниже._
-
-В качестве аргумента `$class` в конструктор `ObjectConstructor` следует передать экземпляр `Mapper`,
-который вернёт имя класса создаваемого объекта. 
-
-
-```php
-use App\Foo;
-use DobroSite\Mapping;
-
-$mapper = new Mapping\ObjectConstructor(Mapping\Constant(Foo::class));
-$instanceOfFoo = $mapper->input(['foo' => 'foo value']);
-```
-
-```php
-use App\Foo;
-use App\Bar;
-use DobroSite\Mapping;
-
-$mapper = new Mapping\ObjectConstructor(
-  Mapping\Callback(
-    fn(array $properties) => array_key_exists('bar', $properties) ? Bar::class : Foo::class, 
-  )
-);
-
-$instanceOfFoo = $mapper->input(['foo' => 'foo value']);
-$instanceOfBar = $mapper->input(['bar' => 'bar value']);
-```
-
-### ObjectFactory
-
-Отображает массив на объект, используя для создания объекта фабрику.
-
-_Подробнее см. «Работа с объектами» ниже._
-
-В качестве аргумента `$factory` в конструктор `ObjectFactory` следует передать фабрику для создания
-нужных объектов.
-
-```php
-use DobroSite\Mapping;
-
-$mapper = new Mapping\ObjectFactory('\App\factory_function');
-$mapper = new Mapping\ObjectFactory(factory_function(...));
-$mapper = new Mapping\ObjectFactory([Factory::class, 'staticMethod']);
-$mapper = new Mapping\ObjectFactory([$factory, 'method']);
-$mapper = new Mapping\ClassType\CallableObjectFactory(
-  fn(string $foo, string $bar) => new SomeClass($foo, $bar)
-);
-```
+Принимает на входе объект, возвращает на выходе ассоциативный массив его публичных свойств.
+Предназначен для использования в `ObjectMapper`.
 
 ## Работа с объектами
 

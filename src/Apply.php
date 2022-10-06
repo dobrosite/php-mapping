@@ -21,12 +21,12 @@ class Apply implements BidirectionalMapper
     public function input(mixed $source): mixed
     {
         $mapper = $this->input->input($source);
-        if (!$mapper instanceof Mapper) {
+        if (!$mapper instanceof InputMapper) {
             throw new InvalidMapping(
                 \sprintf(
                     'Mapper passed to %s::__construct should return instance of %s, but it returned %s.',
                     $this::class,
-                    Mapper::class,
+                    InputMapper::class,
                     formatValue($mapper)
                 )
             );
@@ -38,12 +38,12 @@ class Apply implements BidirectionalMapper
     public function output(mixed $source): mixed
     {
         $mapper = $this->output->output($source);
-        if (!$mapper instanceof Mapper) {
+        if (!$mapper instanceof OutputMapper) {
             throw new InvalidMapping(
                 \sprintf(
                     'Mapper passed to %s::__construct should return instance of %s, but it returned %s.',
                     $this::class,
-                    Mapper::class,
+                    OutputMapper::class,
                     formatValue($mapper)
                 )
             );

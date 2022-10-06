@@ -20,24 +20,9 @@ abstract class AbstractObjectMapper implements BidirectionalMapper
         return $object;
     }
 
-    /**
-     * @return array<string, mixed>
-     *
-     * @throws InvalidSourceType
-     */
-    public function output(mixed $source): array
+    public function output(mixed $source): mixed
     {
-        checkSourceType($this, 'input', ['object'], $source);
-        \assert(\is_object($source));
-
-        $object = new \ReflectionObject($source);
-
-        $output = [];
-        foreach ($object->getProperties() as $property) {
-            $output[$property->getName()] = $property->getValue($source);
-        }
-
-        return $output;
+        return (new PublicProperties())->output($source);
     }
 
     /**

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
+use DobroSite\Mapping\BidirectionalMapper;
 use DobroSite\Mapping\Map;
-use DobroSite\Mapping\Mapper;
 use DobroSite\Mapping\Nullable;
 
 /**
@@ -59,7 +59,7 @@ final class NullableTest extends BidirectionalTestCase
         $this->expectNotToPerformAssertions();
     }
 
-    protected function createMapper(mixed ...$arguments): Mapper
+    protected function createMapper(mixed ...$arguments): BidirectionalMapper
     {
         return new Nullable(...$arguments);
     }

@@ -9,11 +9,16 @@ use DobroSite\Mapping\Exception\InvalidMapping;
 use DobroSite\Mapping\Exception\InvalidSourceType;
 use DobroSite\Mapping\Exception\InvalidSourceValue;
 
-class ObjectConstructor extends AbstractObjectMapper
+class Constructor extends AbstractObjectMapper
 {
-    public function __construct(
-        private readonly Mapper $class,
-    ) {
+    private readonly InputMapper $class;
+
+    public function __construct(InputMapper | string $class)
+    {
+        if (\is_string($class)) {
+            $class = new Constant(input: $class);
+        }
+        $this->class = $class;
     }
 
     /**
@@ -39,22 +44,10 @@ class ObjectConstructor extends AbstractObjectMapper
                     )
                 );
             }
-            try {
-                $arguments = $this->extractArgumentsForParameters(
-                    $constructor->getParameters(),
-                    $properties
-                );
-            } catch (\DomainException $exception) {
-                throw new InsufficientInput(
-                    \sprintf(
-                        'Cannot call %s::__construct(). %s',
-                        $className,
-                        $exception->getMessage()
-                    ),
-                    0,
-                    $exception
-                );
-            }
+            $arguments = $this->extractArgumentsForParameters(
+                $constructor->getParameters(),
+                $properties
+            );
         }
 
         return $class->newInstance(...$arguments);

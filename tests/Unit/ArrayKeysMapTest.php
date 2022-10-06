@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Tests\Unit;
 
 use DobroSite\Mapping\ArrayKeysMap;
+use DobroSite\Mapping\BidirectionalMapper;
 use DobroSite\Mapping\Exception\InvalidSourceType;
-use DobroSite\Mapping\Mapper;
 
 /**
  * @covers \DobroSite\Mapping\ArrayKeysMap
@@ -85,7 +85,7 @@ final class ArrayKeysMapTest extends BidirectionalTestCase
         $mapper->output('foo');
     }
 
-    protected function createMapper(mixed ...$arguments): Mapper
+    protected function createMapper(mixed ...$arguments): BidirectionalMapper
     {
         return new ArrayKeysMap(...$arguments);
     }

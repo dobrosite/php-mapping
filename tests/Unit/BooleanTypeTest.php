@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
+use DobroSite\Mapping\BidirectionalMapper;
 use DobroSite\Mapping\BooleanType;
 use DobroSite\Mapping\Exception\InvalidSourceType;
 use DobroSite\Mapping\Exception\InvalidSourceValue;
-use DobroSite\Mapping\Mapper;
 
 /**
  * @covers \DobroSite\Mapping\BooleanType
@@ -153,7 +153,7 @@ final class BooleanTypeTest extends BidirectionalTestCase
         $mapper->output('true');
     }
 
-    protected function createMapper(mixed ...$arguments): Mapper
+    protected function createMapper(mixed ...$arguments): BidirectionalMapper
     {
         return new BooleanType(...$arguments);
     }

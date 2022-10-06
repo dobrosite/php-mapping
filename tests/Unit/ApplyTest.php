@@ -6,11 +6,12 @@ namespace Tests\Unit;
 
 use DobroSite\Mapping\Apply;
 use DobroSite\Mapping\AsIs;
+use DobroSite\Mapping\BidirectionalMapper;
 use DobroSite\Mapping\Callback;
 use DobroSite\Mapping\Constant;
 use DobroSite\Mapping\Exception\InvalidMapping;
-use DobroSite\Mapping\FloatType;
-use DobroSite\Mapping\Mapper;
+use DobroSite\Mapping\InputMapper;
+use DobroSite\Mapping\OutputMapper;
 
 /**
  * @covers \DobroSite\Mapping\Apply
@@ -77,7 +78,7 @@ final class ApplyTest extends BidirectionalTestCase
                 \sprintf(
                     "Mapper passed to %s::__construct should return instance of %s, but it returned 'foo'.",
                     Apply::class,
-                    Mapper::class
+                    InputMapper::class
                 )
             )
         );
@@ -102,7 +103,7 @@ final class ApplyTest extends BidirectionalTestCase
                 \sprintf(
                     "Mapper passed to %s::__construct should return instance of %s, but it returned 'foo'.",
                     Apply::class,
-                    Mapper::class
+                    OutputMapper::class
                 )
             )
         );
@@ -115,7 +116,7 @@ final class ApplyTest extends BidirectionalTestCase
         $this->expectNotToPerformAssertions();
     }
 
-    protected function createMapper(mixed ...$arguments): Mapper
+    protected function createMapper(mixed ...$arguments): BidirectionalMapper
     {
         return new Apply(...$arguments);
     }

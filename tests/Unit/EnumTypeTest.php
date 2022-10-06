@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
+use DobroSite\Mapping\BidirectionalMapper;
 use DobroSite\Mapping\EnumType;
 use DobroSite\Mapping\Exception\InvalidSourceType;
 use DobroSite\Mapping\Exception\InvalidSourceValue;
-use DobroSite\Mapping\Mapper;
 use Tests\Fixture\TestEnum;
 use Tests\Fixture\TestEnum2;
 
@@ -89,7 +89,7 @@ final class EnumTypeTest extends BidirectionalTestCase
         new EnumType(\stdClass::class);
     }
 
-    protected function createMapper(mixed ...$arguments): Mapper
+    protected function createMapper(mixed ...$arguments): BidirectionalMapper
     {
         return new EnumType(...$arguments);
     }

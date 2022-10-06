@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Tests\Unit;
 
 use DobroSite\Mapping\AsIs;
+use DobroSite\Mapping\BidirectionalMapper;
 use DobroSite\Mapping\Callback;
 use DobroSite\Mapping\Collection;
 use DobroSite\Mapping\Exception\InvalidSourceType;
-use DobroSite\Mapping\Mapper;
 
 /**
  * @covers \DobroSite\Mapping\Collection
@@ -75,7 +75,7 @@ final class CollectionTest extends BidirectionalTestCase
         $mapper->output('foo');
     }
 
-    protected function createMapper(mixed ...$arguments): Mapper
+    protected function createMapper(mixed ...$arguments): BidirectionalMapper
     {
         return new Collection(...$arguments);
     }

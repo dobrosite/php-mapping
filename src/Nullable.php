@@ -7,7 +7,7 @@ namespace DobroSite\Mapping;
 class Nullable implements BidirectionalMapper
 {
     public function __construct(
-        private readonly Mapper $mapper,
+        private readonly BidirectionalMapper $mapper,
     ) {
     }
 

@@ -26,7 +26,7 @@ class Map implements BidirectionalMapper
         return $source;
     }
 
-    public function output(mixed $source): int | string
+    public function output(mixed $source): mixed
     {
         $key = \array_search($source, $this->map, true);
         if (\is_string($key) || \is_int($key)) {

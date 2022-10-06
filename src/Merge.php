@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace DobroSite\Mapping;
 
+use DobroSite\Mapping\Exception\InvalidMapping;
+
 class Merge implements OutputMapper
 {
     /**
@@ -16,6 +18,9 @@ class Merge implements OutputMapper
         $this->mappers = $mappers;
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function output(mixed $source): array
     {
         checkSourceType($this, 'output', ['array'], $source);
@@ -23,7 +28,17 @@ class Merge implements OutputMapper
 
         $result = [$source];
         foreach ($this->mappers as $mapper) {
-            $result[] = $mapper->output($source);
+            $array = $mapper->output($source);
+            if (!\is_array($array)) {
+                throw new InvalidMapping(
+                    \sprintf(
+                        'All mappers specified in %s::__construct should return array, but one of them returned %s.',
+                        $this::class,
+                        \var_export($array, true)
+                    )
+                );
+            }
+            $result[] = $array;
         }
 
         return \array_merge(...$result);

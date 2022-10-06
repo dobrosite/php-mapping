@@ -11,16 +11,19 @@
 - Метод `input` из `Mapper` перенесён в `InputMapper`.
 - Метод `output` из `Mapper` перенесён в `OutputMapper`.
 - `ObjectMapper` переименован в `AbstractObjectMapper`.
+- `ObjectConstructor` переименован в `Constructor`.
+- В конструктор `Constructor` теперь можно передавать имя класса в виде строки.
 
 ### Добавлено
 
 - Добавлены интерфейсы:
-  - `InputMapper`
-  - `OutputMapper`
-  - `BidirectionalMapper`
+    - `InputMapper`
+    - `OutputMapper`
+    - `BidirectionalMapper`
 - Добавлены классы:
-  - `Merge`
-
+    - `Merge`
+    - `PublicProperties`
+    - `ObjectMapper`
 
 ## 0.8.1 - 13.09.2022
 
@@ -29,11 +32,9 @@
 - Если значение отсутствует в карте `Map`, то вместо выбрасывания исключения это значение
   возвращается как есть.
 
-
 ## 0.8.0 - 13.09.2022
 
 **Полностью изменена концепция библиотеки. Все старые классы удалены и заменены новыми.**
-
 
 ## 0.7.1 - 01.09.2022
 
@@ -41,19 +42,17 @@
 
 - Более понятное сообщение об ошибке в случае невозможности преобразовать значение свойства.
 
-
 ## 0.7.0 - 31.08.2022
 
 ### Добавлено
 
 - Добавлены интерфейсы
-  - `OneOf\Selector`
+    - `OneOf\Selector`
 - Добавлены классы
-  - `OneOf`.
-  - `OneOf\ByDiscriminator`.
-  - `OneOf\ByExistedField`.
-  - `Path\SubPath`.
-
+    - `OneOf`.
+    - `OneOf\ByDiscriminator`.
+    - `OneOf\ByExistedField`.
+    - `Path\SubPath`.
 
 ## 0.6.1 - 31.08.2022
 
@@ -61,13 +60,11 @@
 
 - Метод `ClassType::toDataValue` не работал рекурсивно.
 
-
 ## 0.6.0 - 30.08.2022
 
 ### Добавлено
 
 - Всем типам добавлен метод `toDataValue`.
-
 
 ## 0.5.0 - 25.08.2022
 
@@ -75,14 +72,12 @@
 
 - Новая стратегия определения имени класса — `ClassNameMap`.
 
-
 ## 0.4.2 - 24.08.2022
 
 ### Исправлено
 
 - Значения для пропущенных аргументов по умолчанию конструктора/фабрики добавлялись во входные
   данные под неправильным именем.
-
 
 ## 0.4.1 - 24.08.2022
 
@@ -92,13 +87,11 @@
   в конструкторе/фабрики было более одного необязательного аргумента и один из них (кроме
   последнего) не был указан во входных данных.
 
-
 ## 0.4.0 - 23.08.2022
 
 ### Добавлено
 
 - `CollectionType`
-
 
 ## 0.3.0 - 23.08.2022
 
@@ -106,11 +99,9 @@
 
 - `BooleanType`
 
-
 ## 0.2.4 - 22.08.2022
 
 - Рефакторинг
-
 
 ## 0.2.3 - 22.08.2022
 
@@ -118,56 +109,52 @@
 
 - Исправлена повторная установка некоторых значений.
 
-
 ## 0.2.2 - 22.08.2022
 
 ### Исправлено
 
 - Исправлено двойное преобразование значений при наличии конструктора класса.
 
-
 ## 0.2.1 - 22.08.2022
 
 ### Исправлено
 
-- Не устанавливалось или устанавливалось неправильно значение для свойств типа `ClassType`, включая 
+- Не устанавливалось или устанавливалось неправильно значение для свойств типа `ClassType`, включая
   значения по умолчанию.
 
 ### Изменено
 
 - `Properties` теперь поддерживает интерфейс `Iterator`.
 
-
 ## 0.2.0 - 19.08.2022
 
 ### Добавлено
 
 - Новые типы:
-  - `CustomType` 
-  - `FloatType`
-  - `MapType`
-  - `NullableType`
-
+    - `CustomType`
+    - `FloatType`
+    - `MapType`
+    - `NullableType`
 
 ## 0.1.0 - 19.08.2022
 
 ### Добавлено
 
 - Типы:
-  - `Type`
-  - `ClassType`
-    - `TargetClassResolver`
-      - `ClassName`
-    - `Properties`
-      - `Property`
-    - `ObjectFactory`
-      - `AbstractObjectFactory`
-      - `DefaultObjectFactory`
-      - `CallableObjectFactory`
-  - `EnumType`
-  - `SameType`
+    - `Type`
+    - `ClassType`
+        - `TargetClassResolver`
+            - `ClassName`
+        - `Properties`
+            - `Property`
+        - `ObjectFactory`
+            - `AbstractObjectFactory`
+            - `DefaultObjectFactory`
+            - `CallableObjectFactory`
+    - `EnumType`
+    - `SameType`
 - Исключения:
-  - `ConfigurationError`
-  - `DataError`
+    - `ConfigurationError`
+    - `DataError`
 - Прочее:
-  - `DefaultValue`
+    - `DefaultValue`

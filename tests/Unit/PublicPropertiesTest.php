@@ -4,36 +4,36 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use DobroSite\Mapping\Constant;
 use DobroSite\Mapping\Exception\InvalidSourceType;
-use DobroSite\Mapping\Merge;
 use DobroSite\Mapping\OutputMapper;
+use DobroSite\Mapping\PublicProperties;
+use Tests\Fixture\ClassWithConstructor;
 
 /**
- * @covers \DobroSite\Mapping\Merge
+ * @covers \DobroSite\Mapping\PublicProperties
  */
-final class MergeTest extends OutputMapperTestCase
+final class PublicPropertiesTest extends OutputMapperTestCase
 {
     public static function outputDataProvider(): iterable
     {
-        yield 'foo+bar' => [
-            'given' => ['foo' => 'foo value'],
+        $object = new ClassWithConstructor('foo value', 'bar value');
+
+        yield 'Есть только публичные свойства' => [
+            'given' => $object,
             'expected' => ['foo' => 'foo value', 'bar' => 'bar value'],
-            'arguments' => [
-                new Constant(output: ['bar' => 'bar value']),
-            ],
+            'arguments' => [],
         ];
     }
 
     public function testInvalidOutputType(): void
     {
-        $mapper = new Merge();
+        $mapper = new PublicProperties();
 
         $this->expectExceptionObject(
             new InvalidSourceType(
                 \sprintf(
-                    "Argument for the %s::output should be one of [array], but 'foo' given.",
-                    Merge::class
+                    "Argument for the %s::output should be one of [object], but 'foo' given.",
+                    PublicProperties::class
                 )
             )
         );
@@ -43,6 +43,6 @@ final class MergeTest extends OutputMapperTestCase
 
     protected function createMapper(mixed ...$arguments): OutputMapper
     {
-        return new Merge(...$arguments);
+        return new PublicProperties();
     }
 }

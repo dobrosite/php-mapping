@@ -6,9 +6,9 @@ namespace Tests\Unit;
 
 use DobroSite\Mapping\ArrayValues;
 use DobroSite\Mapping\AsIs;
+use DobroSite\Mapping\BidirectionalMapper;
 use DobroSite\Mapping\Callback;
 use DobroSite\Mapping\Exception\InvalidSourceType;
-use DobroSite\Mapping\Mapper;
 
 /**
  * @covers \DobroSite\Mapping\ArrayValues
@@ -84,7 +84,7 @@ final class ArrayValuesTest extends BidirectionalTestCase
         $mapper->output('foo');
     }
 
-    protected function createMapper(mixed ...$arguments): Mapper
+    protected function createMapper(mixed ...$arguments): BidirectionalMapper
     {
         return new ArrayValues(...$arguments);
     }

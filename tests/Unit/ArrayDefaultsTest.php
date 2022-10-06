@@ -6,7 +6,7 @@ namespace Tests\Unit;
 
 use DobroSite\Mapping\ArrayDefaults;
 use DobroSite\Mapping\Exception\InvalidSourceType;
-use DobroSite\Mapping\Mapper;
+use DobroSite\Mapping\InputMapper;
 
 /**
  * @covers \DobroSite\Mapping\ArrayDefaults
@@ -49,7 +49,7 @@ final class ArrayDefaultsTest extends InputMapperTestCase
         $mapper->input('foo');
     }
 
-    protected function createMapper(mixed ...$arguments): Mapper
+    protected function createMapper(mixed ...$arguments): InputMapper
     {
         return new ArrayDefaults(...$arguments);
     }

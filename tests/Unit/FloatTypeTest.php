@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
+use DobroSite\Mapping\BidirectionalMapper;
 use DobroSite\Mapping\Exception\InvalidSourceType;
 use DobroSite\Mapping\FloatType;
-use DobroSite\Mapping\Mapper;
 
 /**
  * @covers \DobroSite\Mapping\FloatType
@@ -110,7 +110,7 @@ final class FloatTypeTest extends BidirectionalTestCase
         $type->output('123');
     }
 
-    protected function createMapper(mixed ...$arguments): Mapper
+    protected function createMapper(mixed ...$arguments): BidirectionalMapper
     {
         return new FloatType(...$arguments);
     }

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
+use DobroSite\Mapping\BidirectionalMapper;
 use DobroSite\Mapping\Callback;
-use DobroSite\Mapping\Mapper;
 
 /**
  * @covers \DobroSite\Mapping\Callback
@@ -54,7 +54,7 @@ final class CallbackTest extends BidirectionalTestCase
         $this->expectNotToPerformAssertions();
     }
 
-    protected function createMapper(mixed ...$arguments): Mapper
+    protected function createMapper(mixed ...$arguments): BidirectionalMapper
     {
         return new Callback(...$arguments);
     }

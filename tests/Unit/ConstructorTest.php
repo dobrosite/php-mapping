@@ -4,22 +4,22 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
+use DobroSite\Mapping\BidirectionalMapper;
 use DobroSite\Mapping\Constant;
+use DobroSite\Mapping\Constructor;
 use DobroSite\Mapping\Exception\InsufficientInput;
 use DobroSite\Mapping\Exception\InvalidMapping;
 use DobroSite\Mapping\Exception\InvalidSourceType;
-use DobroSite\Mapping\Exception\InvalidSourceValue;
-use DobroSite\Mapping\Mapper;
-use DobroSite\Mapping\ObjectConstructor;
+use DobroSite\Mapping\PublicProperties;
 use Tests\Fixture\ClassWithConstructor;
 use Tests\Fixture\ClassWithoutConstructor;
 use Tests\Fixture\ClassWithPrivateConstructor;
 
 /**
- * @covers \DobroSite\Mapping\ObjectConstructor
+ * @covers \DobroSite\Mapping\Constructor
  * @covers \DobroSite\Mapping\AbstractObjectMapper
  */
-final class ObjectConstructorTest extends BidirectionalTestCase
+final class ConstructorTest extends BidirectionalTestCase
 {
     public static function inputDataProvider(): iterable
     {
@@ -66,13 +66,13 @@ final class ObjectConstructorTest extends BidirectionalTestCase
      */
     public function testClassNameIsNotString(): void
     {
-        $mapper = new ObjectConstructor(new Constant(null));
+        $mapper = new Constructor(new Constant(null));
 
         $this->expectExceptionObject(
             new InvalidMapping(
                 \sprintf(
                     '%s cannot create object: class name should be a string, but NULL returned by class name mapper.',
-                    ObjectConstructor::class
+                    Constructor::class
                 )
             )
         );
@@ -85,13 +85,13 @@ final class ObjectConstructorTest extends BidirectionalTestCase
      */
     public function testClassNotExists(): void
     {
-        $mapper = new ObjectConstructor(new Constant('NotExistedClass'));
+        $mapper = new Constructor(new Constant('NotExistedClass'));
 
         $this->expectExceptionObject(
             new InvalidMapping(
                 \sprintf(
                     '%s cannot create object. Class "NotExistedClass" does not exist',
-                    ObjectConstructor::class
+                    Constructor::class
                 )
             )
         );
@@ -101,13 +101,13 @@ final class ObjectConstructorTest extends BidirectionalTestCase
 
     public function testInvalidInputType(): void
     {
-        $mapper = new ObjectConstructor(new Constant(input: \stdClass::class));
+        $mapper = new Constructor(new Constant(input: \stdClass::class));
 
         $this->expectExceptionObject(
             new InvalidSourceType(
                 \sprintf(
                     "Argument for the %s::input should be one of [array], but 'foo' given.",
-                    ObjectConstructor::class
+                    Constructor::class
                 )
             )
         );
@@ -117,13 +117,13 @@ final class ObjectConstructorTest extends BidirectionalTestCase
 
     public function testInvalidOutputType(): void
     {
-        $mapper = new ObjectConstructor(new Constant(input: \stdClass::class));
+        $mapper = new Constructor(new Constant(input: \stdClass::class));
 
         $this->expectExceptionObject(
             new InvalidSourceType(
                 \sprintf(
-                    "Argument for the %s::input should be one of [object], but array (\n  0 => 'foo',\n) given.",
-                    ObjectConstructor::class
+                    "Argument for the %s::output should be one of [object], but array (\n  0 => 'foo',\n) given.",
+                    PublicProperties::class
                 )
             )
         );
@@ -136,7 +136,7 @@ final class ObjectConstructorTest extends BidirectionalTestCase
      */
     public function testPrivateConstructor(): void
     {
-        $mapper = new ObjectConstructor(new Constant(ClassWithPrivateConstructor::class));
+        $mapper = new Constructor(new Constant(ClassWithPrivateConstructor::class));
 
         $this->expectExceptionObject(
             new InvalidMapping(
@@ -155,7 +155,7 @@ final class ObjectConstructorTest extends BidirectionalTestCase
      */
     public function testValueForArgumentNotExists(): void
     {
-        $mapper = new ObjectConstructor(new Constant(ClassWithConstructor::class));
+        $mapper = new Constructor(new Constant(ClassWithConstructor::class));
 
         $this->expectExceptionObject(
             new InsufficientInput('There is no "bar" field in the input data.')
@@ -164,8 +164,8 @@ final class ObjectConstructorTest extends BidirectionalTestCase
         $mapper->input(['foo' => 'foo value']);
     }
 
-    protected function createMapper(mixed ...$arguments): Mapper
+    protected function createMapper(mixed ...$arguments): BidirectionalMapper
     {
-        return new ObjectConstructor(...$arguments);
+        return new Constructor(...$arguments);
     }
 }

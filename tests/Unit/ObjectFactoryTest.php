@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
+use DobroSite\Mapping\BidirectionalMapper;
 use DobroSite\Mapping\Exception\InvalidSourceType;
-use DobroSite\Mapping\Mapper;
 use DobroSite\Mapping\ObjectFactory;
+use DobroSite\Mapping\PublicProperties;
 use Tests\Fixture\ClassWithConstructor;
 use Tests\Fixture\SyntheticConstructor;
 use Tests\Fixture\TestFactory;
@@ -117,8 +118,8 @@ final class ObjectFactoryTest extends BidirectionalTestCase
         $this->expectExceptionObject(
             new InvalidSourceType(
                 \sprintf(
-                    "Argument for the %s::input should be one of [object], but array (\n  0 => 'foo',\n) given.",
-                    ObjectFactory::class
+                    "Argument for the %s::output should be one of [object], but array (\n  0 => 'foo',\n) given.",
+                    PublicProperties::class
                 )
             )
         );
@@ -134,7 +135,7 @@ final class ObjectFactoryTest extends BidirectionalTestCase
         $this->expectNotToPerformAssertions();
     }
 
-    protected function createMapper(mixed ...$arguments): Mapper
+    protected function createMapper(mixed ...$arguments): BidirectionalMapper
     {
         return new ObjectFactory(...$arguments);
     }
