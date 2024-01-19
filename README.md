@@ -29,7 +29,7 @@
 public function input(mixed $source): mixed;
 ```
 
-### InputMapper
+### OutputMapper
 
 Преобразователь выходных данных. Содержит единственный метод:
 
